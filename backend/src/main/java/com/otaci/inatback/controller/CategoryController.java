@@ -1,0 +1,26 @@
+package com.otaci.inatback.controller;
+
+import com.otaci.inatback.dto.CategoryResponse;
+import com.otaci.inatback.model.ApiResponse;
+import com.otaci.inatback.service.CategoryService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+@CrossOrigin(origins = "http://localhost:5173")
+@RequestMapping("/api/categories")
+@RequiredArgsConstructor
+@RestController
+public class CategoryController {
+    private final CategoryService categoryService;
+
+    @GetMapping("/main")
+    public ResponseEntity<ApiResponse<List<CategoryResponse>>> getMainCategories() {
+        List<CategoryResponse> result = categoryService.getMainCategories();
+        return ResponseEntity.ok(ApiResponse.success(result));
+    }
+}
