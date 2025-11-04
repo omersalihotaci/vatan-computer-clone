@@ -7,7 +7,7 @@ function CategoryMenu() {
   if (error) return <p>Kategoriler alınırken hata oluştu!</p>;
 
   return (
-      <nav className="flex gap-4 p-3 bg-white shadow">
+      <div className=" hidden lg:flex justify-center gap-4 p-3 mt-2 bg-white border-y border-gray-200  ">
           {data.map((cat) => (
               <button
                   key={cat.id}
@@ -16,7 +16,7 @@ function CategoryMenu() {
                   {cat.name}
               </button>
           ))}
-      </nav>
+      </div>
   );
 }
 
