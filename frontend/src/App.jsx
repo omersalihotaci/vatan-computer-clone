@@ -1,6 +1,7 @@
 
 import './App.css'
 import Navbar from './components/navbar/Navbar'
+import Slider from './components/Slider.jsx'
 
 function App() {
   
@@ -8,6 +9,7 @@ function App() {
   return (
     <div>
       <Navbar />
+     
     </div>
   )
 }

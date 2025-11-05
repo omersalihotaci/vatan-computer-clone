@@ -3,8 +3,8 @@ import { FiUser } from "react-icons/fi";
 import { IoSearch } from "react-icons/io5";
 import { AiOutlineShoppingCart } from "react-icons/ai";
 import { RxHamburgerMenu } from "react-icons/rx";
-import logoB from "../../assets/vatan-bg-blue.jpg";
-import logoW from "../../assets/vatan-bg-white.jpg";
+import logoB from "../../assets/logo/vatan-bg-blue.jpg";
+import logoW from "../../assets/logo/vatan-bg-white.jpg";
 import { MdKeyboardArrowDown } from "react-icons/md";
 
 function MainNavbar() {
