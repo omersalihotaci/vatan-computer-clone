@@ -2,7 +2,8 @@ package com.otaci.inatback.controller;
 
 import com.otaci.inatback.dto.CategoryResponse;
 import com.otaci.inatback.model.ApiResponse;
-import com.otaci.inatback.service.impl.CategoryServiceImpl;
+import com.otaci.inatback.service.ICategoryService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -15,12 +16,13 @@ import java.util.List;
 @RequestMapping("/api/categories")
 @RequiredArgsConstructor
 @RestController
+@Tag(name = "Category API", description = "Kategori işlemleri")
 public class CategoryController {
-    private final CategoryServiceImpl categoryServiceImpl;
+    private final ICategoryService categoryService;
 
     @GetMapping("/main")
     public ResponseEntity<ApiResponse<List<CategoryResponse>>> getMainCategories() {
-        List<CategoryResponse> result = categoryServiceImpl.getMainCategories();
+        List<CategoryResponse> result = categoryService.getMainCategories();
         return ResponseEntity.ok(ApiResponse.success(result));
     }
 }

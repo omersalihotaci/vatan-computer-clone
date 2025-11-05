@@ -13,7 +13,7 @@ public interface ProductMapper {
     @Mapping(target = "categoryName", source = "category.name")
     ProductDTO toDTO(Product product);
 
-    @Mapping(target = "id", ignore = true)
+
     @Mapping(target = "category", ignore = true) // service içinde set edilecek
     Product toEntity(ProductCreateRequest request);
 }
