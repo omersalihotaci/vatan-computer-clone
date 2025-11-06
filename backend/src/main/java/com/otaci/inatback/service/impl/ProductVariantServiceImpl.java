@@ -5,6 +5,7 @@ import com.otaci.inatback.dto.ProductVariantDTO;
 import com.otaci.inatback.dto.ProductVariantListDTO;
 import com.otaci.inatback.entity.Product;
 import com.otaci.inatback.entity.ProductVariant;
+import com.otaci.inatback.exception.custom.ResourceNotFoundException;
 import com.otaci.inatback.mapper.ProductVariantMapper;
 import com.otaci.inatback.repository.ProductRepository;
 import com.otaci.inatback.repository.ProductVariantRepository;
@@ -65,9 +66,8 @@ public class ProductVariantServiceImpl implements IProductVariantService {
     @Override
     @Transactional
     public void deleteVariant(Long variantId) {
-        if (!productVariantRepository.existsById(variantId)) {
-            throw new IllegalArgumentException("Variant not found with id: " + variantId);
-        }
-        productVariantRepository.deleteById(variantId);
+        ProductVariant variant = productVariantRepository.findById(variantId)
+                .orElseThrow(() -> new ResourceNotFoundException("Variant not found with id: " + variantId));
+        productVariantRepository.delete(variant);
     }
 }

@@ -4,6 +4,8 @@ import com.otaci.inatback.dto.ProductCreateRequest;
 import com.otaci.inatback.dto.ProductDTO;
 import com.otaci.inatback.entity.Category;
 import com.otaci.inatback.entity.Product;
+import com.otaci.inatback.exception.custom.ConflictException;
+import com.otaci.inatback.exception.custom.ResourceNotFoundException;
 import com.otaci.inatback.mapper.ProductMapper;
 import com.otaci.inatback.repository.CategoryRepository;
 import com.otaci.inatback.repository.ProductRepository;
@@ -24,18 +26,22 @@ public class ProductServiceImpl implements IProductService {
     @Transactional(readOnly = true)
     public ProductDTO getProductById(Long id) {
         Product product = productRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Product not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found:"+id));
         return productMapper.toDTO(product);
     }
 
     @Override
     @Transactional
     public ProductDTO createProduct(ProductCreateRequest request) {
+        //  Aynı isimde ürün varsa → 409
+        if (productRepository.existsByName(request.name())) {
+            throw new ConflictException("Product already exists: " + request.name());
+        }
         //  Request -> Entity
         Product product = productMapper.toEntity(request);
-        //  Category ilişkilendir
+        //  Kategori bulunamazsa → 404
         Category category =categoryRepository.findById(request.categoryId())
-                .orElseThrow(() -> new RuntimeException("Category not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Category not found:"+request.categoryId()));
         product.setCategory(category);
         //  Kaydet & DTO döndür
         Product savedProduct = productRepository.save(product);
@@ -45,11 +51,9 @@ public class ProductServiceImpl implements IProductService {
     @Override
     @Transactional
     public void deleteProduct(Long id) {
-        // Hard delete (softa çevir duruma göre)
-        if (!productRepository.existsById(id)) {
-            throw new RuntimeException("Product not found: " + id);
-        }
-        productRepository.deleteById(id);
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found: " + id));
+
+        productRepository.delete(product);
     }
 }
-//EXCEPTİONLARI DEĞİŞTİRMEYİ UNUTMA
