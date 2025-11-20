@@ -1,4 +1,10 @@
 package com.otaci.inatback.dto;
 
-public record CategoryTreeResponse() {
+import java.util.List;
+
+public record CategoryTreeResponse(
+        Long id,
+        String name,
+        List<CategoryTreeResponse> children
+) {
 }

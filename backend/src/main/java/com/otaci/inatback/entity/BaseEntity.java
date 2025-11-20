@@ -22,4 +22,7 @@ public abstract class BaseEntity {
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
+
+    private boolean deleted = false;
+    private LocalDateTime deletedAt;
 }

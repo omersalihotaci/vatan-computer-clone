@@ -1,9 +1,14 @@
 package com.otaci.inatback.service;
 
+import com.otaci.inatback.dto.CategoryCreateRequest;
 import com.otaci.inatback.dto.CategoryResponse;
+import com.otaci.inatback.dto.CategoryTreeResponse;
 
 import java.util.List;
 
 public interface ICategoryService {
-     List<CategoryResponse> getMainCategories();
+     List<CategoryTreeResponse> getMainCategories();
+     CategoryResponse createCategory(CategoryCreateRequest request, Long id);
+     CategoryResponse createRootCategory(CategoryCreateRequest request);
+     void deleteCategory(Long id);
 }

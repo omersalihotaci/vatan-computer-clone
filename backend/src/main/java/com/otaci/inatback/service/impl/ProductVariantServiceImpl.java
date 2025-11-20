@@ -50,16 +50,14 @@ public class ProductVariantServiceImpl implements IProductVariantService {
     public ProductVariantDTO createVariant(Long productId, ProductVariantCreateRequest request) {
             //Ürün var mı kontrol et
         Product product =productRepository.findById(productId)
-                .orElseThrow(()-> new IllegalArgumentException("Product not found with id: " + productId));
+                .orElseThrow(()-> new ResourceNotFoundException("Product not found with id: " + productId));
         //Request -> Entity
-        ProductVariant variant = new ProductVariant();
+        ProductVariant variant = productVariantMapper.toEntity(request);
+        //Ürünü Varyanta ata!!!! id değil entitiy setlenir
         variant.setProduct(product);
-        variant.setPrice(request.price());
-        variant.setSku(request.sku());
-        variant.setAttributes(request.attributes());
-        variant.setStock(request.stock());
          //Kaydet DTO Dön
         ProductVariant savedVariant = productVariantRepository.save(variant);
+        //save edileni dön.Veritabanına kayıt ettikten sonra id,time vs de setlenmiş olur
         return productVariantMapper.toDTO(savedVariant);
     }
 

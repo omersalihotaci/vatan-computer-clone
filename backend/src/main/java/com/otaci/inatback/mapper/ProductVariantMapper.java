@@ -1,5 +1,6 @@
 package com.otaci.inatback.mapper;
 
+import com.otaci.inatback.dto.ProductVariantCreateRequest;
 import com.otaci.inatback.dto.ProductVariantDTO;
 import com.otaci.inatback.dto.ProductVariantListDTO;
 import com.otaci.inatback.entity.ProductVariant;
@@ -14,6 +15,7 @@ public interface ProductVariantMapper {
 
     ProductVariantDTO toDTO(ProductVariant variant);
 
+    ProductVariant toEntity(ProductVariantCreateRequest request);
 
     default String buildDisplayName(ProductVariant variant) {
         return variant.getProduct().getName() + " " + variant.getAttributes();

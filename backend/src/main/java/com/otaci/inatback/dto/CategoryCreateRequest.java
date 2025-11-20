@@ -1,4 +1,9 @@
 package com.otaci.inatback.dto;
 
-public record CategoryCreateRequest() {
+import jakarta.validation.constraints.NotBlank;
+
+public record CategoryCreateRequest(
+        @NotBlank
+        String name
+) {
 }
