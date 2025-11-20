@@ -1,12 +1,7 @@
 import { useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Thumbs, Navigation, Autoplay } from "swiper/modules";
-import img1 from "../assets/sliderImage/ecovacs-x11-14-10-25-web.jpg"
-import img2 from "../assets/sliderImage/fibabank-13-2-25-web1.jpg";
 
-const images = [
-    img1,img2
-]
  function Slider() {
     const [thumbsSwiper, setThumbsSwiper] = useState(null);
 

@@ -1,8 +1,8 @@
 import http from "./http";
 
 export const CategoryApi = {
-    getMainCategories: async () => {
-        const res = await http.get("/categories/main");
+    fetchCategoryTree: async () => {
+        const res = await http.get("/categories");
         return res.data.data;
     },
 };
