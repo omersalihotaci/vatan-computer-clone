@@ -1,47 +1,42 @@
-import { useState } from "react";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Thumbs, Navigation, Autoplay } from "swiper/modules";
+// src/components/HeroSlider.tsx
 
- function Slider() {
-    const [thumbsSwiper, setThumbsSwiper] = useState(null);
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Pagination, Autoplay } from "swiper/modules";
+import { useSlider } from "../hooks/useSlider";
+
+export default function HeroSlider() {
+    const { data: sliders, isLoading, error } = useSlider();
+
+    if (isLoading) return <p>Slider yükleniyor...</p>;
+    if (error) return <p>Slider alınırken hata oluştu!</p>;
 
     return (
-        <div className="w-full max-w-[1400px] mx-auto py-4">
-            {/* ✅ Büyük ana slider */}
+        <div className="w-full max-w-[1200px] mx-auto px-6 mt-6">
             <Swiper
-                modules={[Navigation, Thumbs, Autoplay]}
+                modules={[Pagination, Autoplay]}
+                slidesPerView={1}
                 loop={true}
-                autoplay={{ delay: 3500 }}
-                navigation
-                thumbs={{ swiper: thumbsSwiper }}
-                className="rounded-lg overflow-hidden"
+                pagination={{ clickable: true }}
+                autoplay={{
+                    delay: 3000,
+                    disableOnInteraction: false,
+                }}
+                className="rounded-xl shadow-lg"
             >
-                {images.map((src, i) => (
-                    <SwiperSlide key={i}>
+                {sliders.map((slider) => (
+                    <SwiperSlide key={slider.id}>
+                        {/* DESKTOP IMAGE — lg ve üstünde görünür */}
                         <img
-                            src={src}
-                            className="w-full h-[250px] sm:h-[350px] md:h-[450px] object-cover"
-                            alt=""
+                            src={slider.desktopUrl}
+                            alt={slider.title}
+                            className="hidden lg:block w-full h-auto rounded-xl object-contain"
                         />
-                    </SwiperSlide>
-                ))}
-            </Swiper>
 
-            {/* ✅ Thumbnail slider (küçük kareler) */}
-            <Swiper
-                onSwiper={setThumbsSwiper}
-                modules={[Thumbs]}
-                slidesPerView={5}
-                spaceBetween={10}
-                watchSlidesProgress
-                className="mt-4"
-            >
-                {images.map((src, i) => (
-                    <SwiperSlide key={i}>
+                        {/* MOBILE IMAGE — lg altında görünür */}
                         <img
-                            src={src}
-                            className="w-full h-16 object-cover border rounded cursor-pointer hover:opacity-80 transition"
-                            alt=""
+                            src={slider.mobileUrl}
+                            alt={slider.title}
+                            className="block lg:hidden w-full h-auto rounded-xl object-contain"
                         />
                     </SwiperSlide>
                 ))}
@@ -49,4 +44,3 @@ import { Thumbs, Navigation, Autoplay } from "swiper/modules";
         </div>
     );
 }
-export default Slider;

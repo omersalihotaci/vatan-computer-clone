@@ -19,8 +19,8 @@ function TopInfoBar() {
     ];
 
     return (
-        <div className="w-full text-xs text-gray-600 py-2 hidden lg:block">
-            <div className="max-w-7xl mx-auto flex items-center gap-6 overflow-x-hidden whitespace-nowrap px-4">
+        <div className="w-full text-xs text-gray-600 py-2 hidden lg:block bg-white">
+            <div className="container mx-auto px-6 flex flex-wrap justify-center gap-6">
                 {topBarLinks.map((item) => (
                     <Link
                         key={item.label}

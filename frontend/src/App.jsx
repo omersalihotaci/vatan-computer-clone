@@ -1,7 +1,11 @@
 
 import './App.css'
 import Navbar from './components/navbar/Navbar'
-import Slider from './components/Slider.jsx'
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import Slider from "./components/Slider.jsx";
+
 
 function App() {
   
@@ -9,7 +13,7 @@ function App() {
   return (
     <div>
       <Navbar />
-     
+      <Slider />
     </div>
   )
 }
