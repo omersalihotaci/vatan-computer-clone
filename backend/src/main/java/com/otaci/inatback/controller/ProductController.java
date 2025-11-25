@@ -1,7 +1,7 @@
 package com.otaci.inatback.controller;
 
 import com.otaci.inatback.dto.ProductCreateRequest;
-import com.otaci.inatback.dto.ProductDTO;
+import com.otaci.inatback.dto.ProductResponse;
 import com.otaci.inatback.model.ApiResponse;
 import com.otaci.inatback.service.IProductService;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -9,6 +9,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/products")
@@ -20,12 +22,16 @@ public class ProductController {
     private final IProductService productService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<ProductDTO>> getProductById(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse<ProductResponse>> getProductById(@PathVariable Long id) {
         return ResponseEntity.ok(ApiResponse.success(productService.getProductById(id)));
+    }
+    @GetMapping("/featured")
+    public ResponseEntity<ApiResponse<List<ProductResponse>>> getFeaturedProducts() {
+       return ResponseEntity.ok(ApiResponse.success(productService.getFeaturedProducts()));
     }
 
     @PostMapping
-    public ResponseEntity<ApiResponse<ProductDTO>> createProduct(@RequestBody @Valid ProductCreateRequest request) {
+    public ResponseEntity<ApiResponse<ProductResponse>> createProduct(@RequestBody @Valid ProductCreateRequest request) {
         return ResponseEntity.ok(ApiResponse.success(productService.createProduct(request)));
     }
 

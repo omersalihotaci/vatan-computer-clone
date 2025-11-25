@@ -1,8 +1,11 @@
 package com.otaci.inatback.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+
+import java.util.List;
 
 public record ProductCreateRequest(
         @NotBlank(message = "{product.name.required}")
@@ -19,6 +22,15 @@ public record ProductCreateRequest(
         @Size(min = 2, max = 60, message = "{product.brand.length}")
         String brand,
 
-        String thumbnailImage
+        @NotEmpty(message = "En az 1 resim gereklidir")
+        @Size(max = 10, message = "En fazla 10 resim yüklenebilir")
+         List<
+                @NotBlank(message = "Resim URL'i boş olamaz")
+                        String
+                > images,
+
+        @NotNull(message = "{product.featured.required}")
+       Boolean featured
+
 ) {
 }

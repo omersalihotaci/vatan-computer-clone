@@ -1,13 +1,17 @@
 package com.otaci.inatback.service;
 
 import com.otaci.inatback.dto.ProductCreateRequest;
-import com.otaci.inatback.dto.ProductDTO;
+import com.otaci.inatback.dto.ProductResponse;
+
+import java.util.List;
 
 public interface IProductService {
 
-    ProductDTO getProductById(Long id);
+    ProductResponse getProductById(Long id);
 
-    ProductDTO createProduct(ProductCreateRequest request);
+    List<ProductResponse> getFeaturedProducts();
+
+    ProductResponse createProduct(ProductCreateRequest request);
 
     void deleteProduct(Long id);
 }

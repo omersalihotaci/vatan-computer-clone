@@ -1,7 +1,7 @@
 package com.otaci.inatback.service.impl;
 
 import com.otaci.inatback.dto.ProductCreateRequest;
-import com.otaci.inatback.dto.ProductDTO;
+import com.otaci.inatback.dto.ProductResponse;
 import com.otaci.inatback.entity.Category;
 import com.otaci.inatback.entity.Product;
 import com.otaci.inatback.exception.custom.ConflictException;
@@ -14,6 +14,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class ProductServiceImpl implements IProductService {
@@ -24,17 +26,23 @@ public class ProductServiceImpl implements IProductService {
 
     @Override
     @Transactional(readOnly = true)
-    public ProductDTO getProductById(Long id) {
+    public ProductResponse getProductById(Long id) {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found:"+id));
         return productMapper.toDTO(product);
     }
 
     @Override
+    public List<ProductResponse> getFeaturedProducts() {
+        List<Product> products =productRepository.findByFeaturedTrue();
+        return productMapper.toDTOList(products);
+    }
+
+    @Override
     @Transactional
-    public ProductDTO createProduct(ProductCreateRequest request) {
+    public ProductResponse createProduct(ProductCreateRequest request) {
         //  Aynı isimde ürün varsa → 409
-        if (productRepository.existsByName(request.name())) {
+        if (productRepository.existsByTitle(request.name())) {
             throw new ConflictException("Product already exists: " + request.name());
         }
         //  Request -> Entity

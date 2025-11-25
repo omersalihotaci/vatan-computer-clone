@@ -18,6 +18,6 @@ public interface ProductVariantMapper {
     ProductVariant toEntity(ProductVariantCreateRequest request);
 
     default String buildDisplayName(ProductVariant variant) {
-        return variant.getProduct().getName() + " " + variant.getAttributes();
+        return variant.getProduct().getTitle() + " " + variant.getAttributes();
     }
 }
