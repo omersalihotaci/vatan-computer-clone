@@ -5,7 +5,7 @@ function CategoryMenu() {
     const { data: categories, isLoading, error } = useCategoryTree();
     const [activeId, setActiveId] = useState(null);
 
-    if (isLoading) return <p>Kategoriler yükleniyor...</p>;
+    if (isLoading) return null;
     if (error) return <p>Kategoriler alınırken hata oluştu!</p>;
 
     const activeCategory = categories.find((c) => c.id === activeId);

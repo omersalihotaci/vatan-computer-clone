@@ -3,8 +3,8 @@ import { FiUser } from "react-icons/fi";
 import { IoSearch } from "react-icons/io5";
 import { AiOutlineShoppingCart } from "react-icons/ai";
 import { RxHamburgerMenu } from "react-icons/rx";
-import logoB from "../../assets/logo/vatan-bg-blue.jpg";
-import logoW from "../../assets/logo/vatan-bg-white.jpg";
+import logoB from "../../assets/logo/logoBlue.png";
+import logoW from "../../assets/logo/logoWhite.png";
 import { MdKeyboardArrowDown } from "react-icons/md";
 
 function MainNavbar() {
@@ -26,7 +26,7 @@ function MainNavbar() {
                         alt="Vatan Logo"
                     />
                     <img
-                        className="hidden lg:block w-[152px] h-auto shrink-0 "
+                        className="hidden lg:block w-[122px] h-auto shrink-0 "
                         src={logoW}
                         alt="Vatan Logo"
                     />
