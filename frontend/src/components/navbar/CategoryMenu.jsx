@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import  { useState } from "react";
 import { useCategoryTree } from "../../hooks/useCategories";
-
+import {  useNavigate } from "react-router-dom";
 function CategoryMenu() {
+    const navigate = useNavigate();
     const { data: categories, isLoading, error } = useCategoryTree();
     const [activeId, setActiveId] = useState(null);
 
@@ -21,6 +22,7 @@ function CategoryMenu() {
                         <button
                             key={cat.id}
                             onMouseEnter={() => setActiveId(cat.id)}
+                            onClick={() => navigate(`/category/${cat.id}`)}
                             className={`text-sm font-medium transition-colors hover:text-blue-600 ${
                                 activeId === cat.id ? "text-blue-600" : ""
                             }`}
@@ -29,38 +31,44 @@ function CategoryMenu() {
                         </button>
                     ))}
 
-                    {activeCategory &&
-                        activeCategory.children &&
-                        activeCategory.children.length > 0 && (
-                            <div className="absolute top-full left-0 w-full bg-white shadow-xl border-t z-20">
-                                <div className="grid grid-cols-4 gap-8 p-6 text-sm">
-                                    {activeCategory.children.map((child) => (
+                    {activeCategory?.children?.length > 0 && (
+                        <div className="absolute top-full left-0 w-full bg-white shadow-xl border-t z-20">
+                            <div className="grid grid-cols-4 gap-8 p-6 text-sm">
+                                {activeCategory.children.map((child) => (
+                                    <div key={child.id} className="space-y-1">
                                         <div
-                                            key={child.id}
-                                            className="space-y-1"
+                                            onClick={() =>
+                                                navigate(
+                                                    `/category/${child.id}`
+                                                )
+                                            }
+                                            className="font-semibold hover:text-blue-600 cursor-pointer"
                                         >
-                                            <div className="font-semibold hover:text-blue-600 cursor-pointer">
-                                                {child.name}
-                                            </div>
-                                            {child.children?.length > 0 && (
-                                                <ul className="space-y-1 text-gray-600">
-                                                    {child.children.map(
-                                                        (sub) => (
-                                                            <li
-                                                                key={sub.id}
-                                                                className="hover:text-blue-600 cursor-pointer"
-                                                            >
-                                                                {sub.name}
-                                                            </li>
-                                                        )
-                                                    )}
-                                                </ul>
-                                            )}
+                                            {child.name}
                                         </div>
-                                    ))}
-                                </div>
+
+                                        {child.children?.length > 0 && (
+                                            <ul className="space-y-1 text-gray-600">
+                                                {child.children.map((sub) => (
+                                                    <li
+                                                        key={sub.id}
+                                                        onClick={() =>
+                                                            navigate(
+                                                                `/category/${sub.id}`
+                                                            )
+                                                        }
+                                                        className="hover:text-blue-600 cursor-pointer"
+                                                    >
+                                                        {sub.name}
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        )}
+                                    </div>
+                                ))}
                             </div>
-                        )}
+                        </div>
+                    )}
                 </div>
             </div>
         </div>
