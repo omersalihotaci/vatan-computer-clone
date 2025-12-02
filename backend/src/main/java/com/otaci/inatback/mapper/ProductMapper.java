@@ -16,8 +16,9 @@ public interface ProductMapper {
     @Mapping(target = "categoryName", source = "category.name")
     @Mapping(
             target = "shortTitle",
-            expression = "java(TextUtils.truncate(product.getTitle(), 70))"
+            expression = "java(TextUtils.truncate(product.getTitle(), 60))"
     )
+    @Mapping(target = "bestSeller", source = "bestSeller")
     ProductResponse toDTO(Product product);
 
 

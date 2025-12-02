@@ -1,6 +1,7 @@
 package com.otaci.inatback.controller;
 
 
+import com.otaci.inatback.dto.PriceIntervalDto;
 import com.otaci.inatback.dto.ProductVariantCreateRequest;
 import com.otaci.inatback.dto.ProductVariantDTO;
 import com.otaci.inatback.dto.ProductVariantListDTO;
@@ -32,6 +33,7 @@ public class ProductVariantController {
     public ResponseEntity<ApiResponse<List<ProductVariantDTO>>> getVariantsByProductId(@PathVariable Long productId){
         return ResponseEntity.ok(ApiResponse.success(productVariantService.getVariantsByProductId(productId)));
     }
+
     @PostMapping("/products/{productId}/variants")
     public ResponseEntity<ApiResponse<ProductVariantDTO>> createVariant(@PathVariable Long productId,@RequestBody @Valid ProductVariantCreateRequest request){
         return ResponseEntity.ok(ApiResponse.success(productVariantService.createVariant(productId,request)));
@@ -41,4 +43,6 @@ public class ProductVariantController {
         productVariantService.deleteVariant(variantId);
         return ResponseEntity.ok(ApiResponse.message("Variant deleted"));
     }
+
+
 }

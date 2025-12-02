@@ -11,6 +11,10 @@ public interface IProductService {
 
     List<ProductResponse> getFeaturedProducts();
 
+     List<ProductResponse> getBestSellerProducts();
+
+    List<ProductResponse> getProductsByCategoryId(Long categoryId);
+
     ProductResponse createProduct(ProductCreateRequest request);
 
     void deleteProduct(Long id);

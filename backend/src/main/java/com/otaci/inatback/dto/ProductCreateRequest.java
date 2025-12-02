@@ -30,7 +30,10 @@ public record ProductCreateRequest(
                 > images,
 
         @NotNull(message = "{product.featured.required}")
-       Boolean featured
+       Boolean featured,
+
+        @NotNull(message = "{product.featured.required}")
+        Boolean bestSeller
 
 ) {
 }

@@ -11,6 +11,8 @@ public record ProductResponse(
         List<String> images,
         Long categoryId,
         String categoryName,
-        Boolean featured
+        boolean featured,
+        boolean bestSeller
+
 ) {
 }

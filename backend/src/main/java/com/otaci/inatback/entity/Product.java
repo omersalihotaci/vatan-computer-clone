@@ -29,7 +29,9 @@ public class Product extends BaseEntity {
     private List<String> images;
 
 
-    private Boolean featured = false;
+    private boolean featured = false;
+
+    private boolean bestSeller = false;
 
 
     @ManyToOne(fetch = FetchType.LAZY)

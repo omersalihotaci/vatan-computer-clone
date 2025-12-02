@@ -31,10 +31,24 @@ public class ProductServiceImpl implements IProductService {
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found:"+id));
         return productMapper.toDTO(product);
     }
-
+    @Transactional(readOnly = true)
     @Override
     public List<ProductResponse> getFeaturedProducts() {
         List<Product> products =productRepository.findByFeaturedTrue();
+        return productMapper.toDTOList(products);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<ProductResponse> getBestSellerProducts() {
+        List<Product> products =productRepository.findByBestSellerTrue();
+        return productMapper.toDTOList(products);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<ProductResponse> getProductsByCategoryId(Long categoryId) {
+        List<Product> products =productRepository.findByCategoryId(categoryId);
         return productMapper.toDTOList(products);
     }
 

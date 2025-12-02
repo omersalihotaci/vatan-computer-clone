@@ -6,9 +6,6 @@ import java.math.BigDecimal;
 import java.util.Map;
 
 public record ProductVariantCreateRequest(
-        @NotBlank(message = "{variant.name.required}")
-        @Size(min = 2, max = 100, message = "{variant.name.length}")
-        String name,
 
         @NotNull(message = "{variant.price.required}")
         @DecimalMin(value = "1.00", message = "{variant.price.min}")

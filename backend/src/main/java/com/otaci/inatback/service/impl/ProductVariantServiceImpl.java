@@ -22,10 +22,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProductVariantServiceImpl implements IProductVariantService {
 
-
     private final ProductVariantRepository productVariantRepository;
     private final ProductRepository productRepository;
     private final ProductVariantMapper productVariantMapper;
+
 
     @Override
     @Transactional(readOnly = true)
@@ -48,16 +48,12 @@ public class ProductVariantServiceImpl implements IProductVariantService {
     @Override
     @Transactional
     public ProductVariantDTO createVariant(Long productId, ProductVariantCreateRequest request) {
-            //Ürün var mı kontrol et
+
         Product product =productRepository.findById(productId)
                 .orElseThrow(()-> new ResourceNotFoundException("Product not found with id: " + productId));
-        //Request -> Entity
         ProductVariant variant = productVariantMapper.toEntity(request);
-        //Ürünü Varyanta ata!!!! id değil entitiy setlenir
         variant.setProduct(product);
-         //Kaydet DTO Dön
         ProductVariant savedVariant = productVariantRepository.save(variant);
-        //save edileni dön.Veritabanına kayıt ettikten sonra id,time vs de setlenmiş olur
         return productVariantMapper.toDTO(savedVariant);
     }
 
@@ -68,4 +64,8 @@ public class ProductVariantServiceImpl implements IProductVariantService {
                 .orElseThrow(() -> new ResourceNotFoundException("Variant not found with id: " + variantId));
         productVariantRepository.delete(variant);
     }
+
+
 }
+
+

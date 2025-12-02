@@ -1,5 +1,6 @@
 package com.otaci.inatback.service;
 
+import com.otaci.inatback.dto.PriceIntervalDto;
 import com.otaci.inatback.dto.ProductVariantCreateRequest;
 import com.otaci.inatback.dto.ProductVariantDTO;
 import com.otaci.inatback.dto.ProductVariantListDTO;
@@ -14,4 +15,8 @@ public interface IProductVariantService {
     ProductVariantDTO createVariant(Long productId, ProductVariantCreateRequest request);
 
     void deleteVariant(Long variantId);
+
+
+
+
 }

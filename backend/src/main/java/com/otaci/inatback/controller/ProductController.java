@@ -29,6 +29,14 @@ public class ProductController {
     public ResponseEntity<ApiResponse<List<ProductResponse>>> getFeaturedProducts() {
        return ResponseEntity.ok(ApiResponse.success(productService.getFeaturedProducts()));
     }
+    @GetMapping("/bestSellers")
+    public ResponseEntity<ApiResponse<List<ProductResponse>>> getBestSellerProducts() {
+        return ResponseEntity.ok(ApiResponse.success(productService.getBestSellerProducts()));
+    }
+    @GetMapping("/category/{categoryId}")
+    public ResponseEntity<ApiResponse<List<ProductResponse>>> getProductsByCategoryId(@PathVariable Long categoryId) {
+        return ResponseEntity.ok(ApiResponse.success(productService.getProductsByCategoryId(categoryId)));
+    }
 
     @PostMapping
     public ResponseEntity<ApiResponse<ProductResponse>> createProduct(@RequestBody @Valid ProductCreateRequest request) {
