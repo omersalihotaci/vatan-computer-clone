@@ -2,11 +2,13 @@ package com.otaci.inatback.service.impl;
 
 import com.otaci.inatback.dto.ProductCreateRequest;
 import com.otaci.inatback.dto.ProductResponse;
+import com.otaci.inatback.dto.ProductVariantResponse;
 import com.otaci.inatback.entity.Category;
 import com.otaci.inatback.entity.Product;
 import com.otaci.inatback.exception.custom.ConflictException;
 import com.otaci.inatback.exception.custom.ResourceNotFoundException;
 import com.otaci.inatback.mapper.ProductMapper;
+import com.otaci.inatback.mapper.ProductVariantMapper;
 import com.otaci.inatback.repository.CategoryRepository;
 import com.otaci.inatback.repository.ProductRepository;
 import com.otaci.inatback.service.IProductService;
@@ -23,13 +25,24 @@ public class ProductServiceImpl implements IProductService {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
     private final ProductMapper productMapper;
+    private final ProductVariantMapper productVariantMapper;
 
     @Override
     @Transactional(readOnly = true)
     public ProductResponse getProductById(Long id) {
-        Product product = productRepository.findById(id)
+        Product product = productRepository.findByIdWithVariants(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found:"+id));
-        return productMapper.toDTO(product);
+       ProductResponse base = productMapper.toDTO(product);
+         List<ProductVariantResponse> variantResponses = product.getVariants()
+                .stream()
+                .map(productVariantMapper::toDTO)
+                .toList();
+
+         return base
+                 .withVariants(variantResponses);
+
+
+
     }
     @Transactional(readOnly = true)
     @Override

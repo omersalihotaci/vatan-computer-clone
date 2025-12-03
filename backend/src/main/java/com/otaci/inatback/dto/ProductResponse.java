@@ -12,7 +12,44 @@ public record ProductResponse(
         Long categoryId,
         String categoryName,
         boolean featured,
-        boolean bestSeller
+        boolean bestSeller,
+        List<ProductVariantResponse> variants,
+        ProductVariantResponse selectedVariant
 
 ) {
+    public ProductResponse withVariants(List<ProductVariantResponse> variants) {
+        return new ProductResponse(
+                id,
+                title,
+                shortTitle,
+                description,
+                brand,
+                images,
+                categoryId,
+                categoryName,
+                featured,
+                bestSeller,
+                variants,
+                selectedVariant
+        );
+    }
+
+    public ProductResponse withSelectedVariant(ProductVariantResponse selected) {
+        return new ProductResponse(
+                id,
+                title,
+                shortTitle,
+                description,
+                brand,
+                images,
+                categoryId,
+                categoryName,
+                featured,
+                bestSeller,
+                variants,
+                selected
+        );
+    }
+
+
 }

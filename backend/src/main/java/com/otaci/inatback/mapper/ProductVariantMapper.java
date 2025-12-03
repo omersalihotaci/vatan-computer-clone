@@ -1,8 +1,8 @@
 package com.otaci.inatback.mapper;
 
 import com.otaci.inatback.dto.ProductVariantCreateRequest;
-import com.otaci.inatback.dto.ProductVariantDTO;
 import com.otaci.inatback.dto.ProductVariantListDTO;
+import com.otaci.inatback.dto.ProductVariantResponse;
 import com.otaci.inatback.entity.ProductVariant;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -13,7 +13,7 @@ public interface ProductVariantMapper {
     @Mapping(target = "displayName", expression = "java(buildDisplayName(variant))")
     ProductVariantListDTO toListDTO(ProductVariant variant);
 
-    ProductVariantDTO toDTO(ProductVariant variant);
+    ProductVariantResponse toDTO(ProductVariant variant);
 
     ProductVariant toEntity(ProductVariantCreateRequest request);
 

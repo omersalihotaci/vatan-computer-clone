@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product,Long> {
@@ -22,20 +23,15 @@ public interface ProductRepository extends JpaRepository<Product,Long> {
 """)
     List<String> findDistinctBrandsByCategory(@Param("categoryId") Long categoryId);
 
+    List<Product> findByCategoryIdAndDeletedFalse(Long categoryId);
+
+    List<Product> findByCategoryIdAndBrandInAndDeletedFalse(Long categoryId, List<String> brands);
+
     @Query("""
-    SELECT DISTINCT p FROM Product p
-    JOIN p.variants v
-    WHERE p.category.id = :categoryId
-      AND p.deleted = false
-       AND (:brands IS NULL OR p.brand IN :brands)
-      AND (:minPrice IS NULL OR v.price >= :minPrice)
-      AND (:maxPrice IS NULL OR v.price <= :maxPrice)
+    SELECT p FROM Product p
+    LEFT JOIN FETCH p.variants v
+    WHERE p.id = :id
 """)
-    List<Product> filterProducts(
-            @Param("categoryId") Long categoryId,
-            @Param("brands") List<String> brands,
-            @Param("minPrice") Double minPrice,
-            @Param("maxPrice") Double maxPrice
-    );
+    Optional<Product> findByIdWithVariants(@Param("id") Long id);
 
 }

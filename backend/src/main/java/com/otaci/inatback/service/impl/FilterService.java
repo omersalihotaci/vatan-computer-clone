@@ -2,6 +2,7 @@
 
     import com.otaci.inatback.dto.PriceIntervalDto;
     import com.otaci.inatback.dto.ProductResponse;
+    import com.otaci.inatback.entity.Product;
     import com.otaci.inatback.exception.custom.ResourceNotFoundException;
     import com.otaci.inatback.mapper.ProductMapper;
     import com.otaci.inatback.repository.CategoryRepository;
@@ -11,9 +12,10 @@
     import lombok.RequiredArgsConstructor;
     import org.springframework.stereotype.Service;
 
+    import java.math.BigDecimal;
     import java.util.ArrayList;
-    import java.util.Collections;
     import java.util.List;
+    import java.util.stream.Stream;
 
     @Service
     @RequiredArgsConstructor
@@ -32,6 +34,18 @@
             if (range < 70000) return 7;
             return 8;
         }
+
+        private static class PriceRange {
+            BigDecimal min;
+            BigDecimal max;
+
+            PriceRange(BigDecimal min, BigDecimal max) {
+                this.min = min;
+                this.max = max;
+            }
+        }
+
+
 
         @Override
         public List<PriceIntervalDto> getPriceIntervalsByCategory(Long categoryId) {
@@ -89,24 +103,83 @@
         }
 
         @Override
-        public List<ProductResponse> filterProducts(Long categoryId,
-                                                    List<String> brands,
-                                                    Double minPrice,
-                                                    Double maxPrice) {
+        public List<ProductResponse> filterProducts(
+                Long categoryId,
+                List<String> brands,
+                BigDecimal minPrice,
+                BigDecimal maxPrice,
+                List<String> priceRanges
+        ) {
 
             categoryRepository.findById(categoryId)
                     .orElseThrow(() -> new ResourceNotFoundException("Category not found"));
-            System.out.println("brands param: " + brands);
 
-            var products = productRepository.filterProducts(
-                    categoryId,
-                    (brands == null) ? Collections.emptyList() : brands,
-                    minPrice,
-                    maxPrice
-            );
-            System.out.println("PRODUCT ENTITIES = " + products);
+            // 1) PriceRanges parse
+            List<PriceRange> parsedRanges = new ArrayList<>();
 
-            return productMapper.toDTOList(products);
+            if (priceRanges != null && !priceRanges.isEmpty()) {
+                for (String r : priceRanges) {
+                    String[] parts = r.split("-");
+                    if (parts.length == 2) {
+                        parsedRanges.add(
+                                new PriceRange(
+                                        new BigDecimal(parts[0]),
+                                        new BigDecimal(parts[1])
+                                )
+                        );
+                    }
+                }
+            }
+
+            // 2) Base products (brand + category)
+            List<Product> products =
+                    (brands != null && !brands.isEmpty())
+                            ? productRepository.findByCategoryIdAndBrandInAndDeletedFalse(categoryId, brands)
+                            : productRepository.findByCategoryIdAndDeletedFalse(categoryId);
+
+            Stream<Product> stream = products.stream();
+
+            // 3) PRICE RANGES VARSA → RANGE FİLTRESİ KULLANILIR
+            if (!parsedRanges.isEmpty()) {
+
+                stream = stream.filter(product -> {
+                    BigDecimal price = product.getMinVariantPrice();
+                    if (price == null) return false;
+
+                    for (PriceRange range : parsedRanges) {
+                        if (price.compareTo(range.min) >= 0 &&
+                                price.compareTo(range.max) <= 0) {
+                            return true;
+                        }
+                    }
+                    return false;
+                });
+
+            }
+
+            // 4) PRICE RANGES YOKSA → min/max KULLANILIR
+            else {
+
+                if (minPrice != null) {
+                    stream = stream.filter(product -> {
+                        BigDecimal price = product.getMinVariantPrice();
+                        return price != null && price.compareTo(minPrice) >= 0;
+                    });
+                }
+
+                if (maxPrice != null) {
+                    stream = stream.filter(product -> {
+                        BigDecimal price = product.getMinVariantPrice();
+                        return price != null && price.compareTo(maxPrice) <= 0;
+                    });
+                }
+            }
+
+            // 5) Map to DTO
+            return stream
+                    .map(productMapper::toDTO)
+                    .toList();
         }
+
 
     }

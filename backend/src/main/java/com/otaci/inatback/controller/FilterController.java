@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 
@@ -32,10 +33,11 @@ public class FilterController {
     public ResponseEntity<ApiResponse<List<ProductResponse>>> filterProducts(
             @PathVariable Long categoryId,
             @RequestParam(required = false) List<String> brands,
-            @RequestParam(required = false) Double minPrice,
-            @RequestParam(required = false) Double maxPrice
+            @RequestParam(required = false) BigDecimal minPrice,
+            @RequestParam(required = false) BigDecimal maxPrice,
+            @RequestParam(required = false) List<String> priceRanges
     ) {
-       return ResponseEntity.ok(ApiResponse.success(filterService.filterProducts(categoryId, brands, minPrice, maxPrice)));
+       return ResponseEntity.ok(ApiResponse.success(filterService.filterProducts(categoryId, brands, minPrice, maxPrice,priceRanges)));
     }
 
 }

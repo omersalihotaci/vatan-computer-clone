@@ -19,6 +19,9 @@ public interface ProductMapper {
             expression = "java(TextUtils.truncate(product.getTitle(), 60))"
     )
     @Mapping(target = "bestSeller", source = "bestSeller")
+    @Mapping(target = "variants", ignore = true)
+    @Mapping(target = "selectedVariant", ignore = true)
+
     ProductResponse toDTO(Product product);
 
 

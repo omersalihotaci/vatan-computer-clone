@@ -5,7 +5,9 @@ import lombok.*;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Getter
@@ -39,4 +41,17 @@ public class Product extends BaseEntity {
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductVariant> variants;
+
+    public BigDecimal getMinVariantPrice() {
+        if (variants == null || variants.isEmpty()) {
+            return null;
+        }
+
+        return variants.stream()
+                .map(ProductVariant::getPrice)
+                .filter(Objects::nonNull)
+                .min(BigDecimal::compareTo)
+                .orElse(null);
+    }
+
 }
