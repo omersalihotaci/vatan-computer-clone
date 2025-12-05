@@ -17,3 +17,11 @@ export const useProductsByCategory = (categoryId) =>
         retry: 1, 
         refetchOnWindowFocus: false, 
     });
+    export const useBestSellerProducts = () =>
+        useQuery({
+            queryKey: ["products", "bestSellers"],
+            queryFn: ProductApi.fetchBestSellerProducts,
+            staleTime: 1000 * 60 * 5,
+            retry: 1,
+            refetchOnWindowFocus: false,
+        });

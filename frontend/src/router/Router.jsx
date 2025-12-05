@@ -1,7 +1,9 @@
 import { createBrowserRouter } from "react-router-dom";
 import MainLayout from "../layout/MainLayout";
-import FeaturedProducts from "../components/FeaturedProducts";
+import FeaturedProducts from "../components/product-card/FeaturedProducts";
 import Slider from "../components/Slider";
+import BestSellerProducts from "../components/product-card/BestSellerProducts";
+import CategoryLayout from "../components/categoryPage/CategoryLayout";
 export const router = createBrowserRouter([
     {
         path: "/",
@@ -13,6 +15,7 @@ export const router = createBrowserRouter([
                     <>
                         <Slider />
                         <FeaturedProducts />
+                        <BestSellerProducts />
                     </>
                 ),
             },
@@ -22,7 +25,7 @@ export const router = createBrowserRouter([
             },
             {
                 path: "category/:categoryId",
-                // element: <CategoryProductsPage />,
+                element: <CategoryLayout />,
             },
         ],
     },

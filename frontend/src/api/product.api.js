@@ -8,5 +8,10 @@ export const ProductApi = {
     fetchProductsByCategory: async (categoryId) => {
         const res = await http.get(`/products/category/${categoryId}`);
         return res.data.data;
+    },
+    fetchBestSellerProducts: async () => {
+        const res = await http.get("/products/bestSellers");
+        return res.data.data;
     }
+    
 };
