@@ -11,7 +11,7 @@ function BestSellerProducts() {
   return (
       <div className="w-full max-w-[1200px] mx-auto mt-10 px-6 relative mb-10">
           <h1 className="text-xl mb-6 font-semibold">Çok Satanlar</h1>
-          
+
           <div className="flex absolute top-3 right-6 gap-2 ">
               <button
                   className="
@@ -65,7 +65,12 @@ function BestSellerProducts() {
                   1024: { slidesPerView: 4, slidesPerGroup: 4 },
                   1280: { slidesPerView: 5, slidesPerGroup: 5 },
               }}
-              className="pb-10" // pagination için alan bırak
+              style={{
+                  "--swiper-pagination-bottom": "0px", // Noktaları en dibe yapıştırır
+                  "--swiper-theme-color": "#000", // (Opsiyonel) Nokta rengini değiştirmek istersen
+              }}
+              className="pb-14!"
+            
           >
               {products &&
                   products.map((product) => (

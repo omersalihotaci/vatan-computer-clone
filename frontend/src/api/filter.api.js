@@ -10,7 +10,7 @@ export const FilterApi = {
         return res.data.data;
     },
     fetchProductsByFilters: async (categoryId,filters) => {
-        const res = await http.get(`/categories/${categoryId}/products`,{ params: filters });
+        const res = await http.get(`/categories/${categoryId}/filters/products`,{ params: filters });
         return res.data.data;
     }
     

@@ -1,7 +1,8 @@
 
 const SIZE_PRESETS = {
     large: {
-        wrapper: "max-w-[280px]",
+        wrapper:
+            "w-[160px] xs:w-[220px] sm:w-[280px] md:w-[220px] lg:w-[240px] xl:w-[280px]",
         img: "h-32 md:h-40 lg:h-[280px]",
         title: "text-sm min-h-[40px] ",
         padding: "p-5",

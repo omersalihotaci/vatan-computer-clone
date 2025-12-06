@@ -9,7 +9,7 @@ function CategoryLayout() {
   const filterState = useFilterState();
   
   return (
-      <div>
+      <div className='flex'>
       <FilterBar categoryId={categoryId} filterState={filterState} />
       <ProductListByCategory categoryId={categoryId} filterState={filterState} />
     </div>

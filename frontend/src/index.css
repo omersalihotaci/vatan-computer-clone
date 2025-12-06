@@ -5,9 +5,22 @@
     --color-secondary: #EA0029;
     --color-cardBorder: #F7F7F7;
     --color-textPrimary: #B5B5B5;
+
+    --breakpoint-xs: 460px;
 }
 @layer {
     button {
         @apply cursor-pointer;
     }
+}
+@layer base {
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    @apply appearance-none;
+    margin: 0;
+  }
+
+  input[type="number"] {
+    -moz-appearance: textfield;
+  }
 }

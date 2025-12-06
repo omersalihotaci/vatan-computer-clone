@@ -11,8 +11,8 @@ function FilterBar({ categoryId, filterState }) {
       setMaxPriceValue,
       selectedPriceRanges,
       togglePriceRange,
-      attributes,
-      toggleAttribute,
+    //  attributes,
+    //  toggleAttribute,
       resetFilters,
   } = filterState;
   return (
