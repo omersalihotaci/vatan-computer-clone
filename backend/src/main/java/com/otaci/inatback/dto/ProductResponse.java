@@ -14,6 +14,7 @@ public record ProductResponse(
         boolean featured,
         boolean bestSeller,
         List<ProductVariantResponse> variants,
+        List<ProductVariantResponse> matchedVariants,
         ProductVariantResponse selectedVariant
 
 ) {
@@ -30,6 +31,7 @@ public record ProductResponse(
                 featured,
                 bestSeller,
                 variants,
+                matchedVariants,
                 selectedVariant
         );
     }
@@ -47,7 +49,25 @@ public record ProductResponse(
                 featured,
                 bestSeller,
                 variants,
+                matchedVariants,
                 selected
+        );
+    }
+    public ProductResponse withMatchedVariants(List<ProductVariantResponse> matchedVariants) {
+        return new ProductResponse(
+                id,
+                title,
+                shortTitle,
+                description,
+                brand,
+                images,
+                categoryId,
+                categoryName,
+                featured,
+                bestSeller,
+                variants,
+                matchedVariants,
+                selectedVariant
         );
     }
 

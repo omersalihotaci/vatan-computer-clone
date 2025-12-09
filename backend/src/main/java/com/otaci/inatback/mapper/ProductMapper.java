@@ -20,6 +20,7 @@ public interface ProductMapper {
     )
     @Mapping(target = "bestSeller", source = "bestSeller")
     @Mapping(target = "variants", ignore = true)
+    @Mapping(target = "matchedVariants", ignore = true)
     @Mapping(target = "selectedVariant", ignore = true)
 
     ProductResponse toDTO(Product product);

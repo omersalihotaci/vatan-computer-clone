@@ -3,8 +3,10 @@
     import com.otaci.inatback.dto.PriceIntervalDto;
     import com.otaci.inatback.dto.ProductResponse;
     import com.otaci.inatback.entity.Product;
+    import com.otaci.inatback.entity.ProductVariant;
     import com.otaci.inatback.exception.custom.ResourceNotFoundException;
     import com.otaci.inatback.mapper.ProductMapper;
+    import com.otaci.inatback.mapper.ProductVariantMapper;
     import com.otaci.inatback.repository.CategoryRepository;
     import com.otaci.inatback.repository.ProductRepository;
     import com.otaci.inatback.repository.ProductVariantRepository;
@@ -14,8 +16,8 @@
 
     import java.math.BigDecimal;
     import java.util.ArrayList;
+    import java.util.Comparator;
     import java.util.List;
-    import java.util.stream.Stream;
 
     @Service
     @RequiredArgsConstructor
@@ -25,6 +27,7 @@
         private final ProductVariantRepository productVariantRepository;
         private final ProductRepository productRepository;
         private final ProductMapper productMapper;
+        private final ProductVariantMapper productVariantMapper;
 
         private int determineBucketCount(double range) {
             if (range < 500) return 3;
@@ -137,48 +140,65 @@
                             ? productRepository.findByCategoryIdAndBrandInAndDeletedFalse(categoryId, brands)
                             : productRepository.findByCategoryIdAndDeletedFalse(categoryId);
 
-            Stream<Product> stream = products.stream();
+            List<ProductResponse> result = new ArrayList<>();
 
-            // 3) PRICE RANGES VARSA → RANGE FİLTRESİ KULLANILIR
-            if (!parsedRanges.isEmpty()) {
+            for (Product product : products) {
 
-                stream = stream.filter(product -> {
-                    BigDecimal price = product.getMinVariantPrice();
-                    if (price == null) return false;
+                // Ürünün tüm varyantlarını al
+                List<ProductVariant> allVariants = product.getVariants();
 
-                    for (PriceRange range : parsedRanges) {
-                        if (price.compareTo(range.min) >= 0 &&
-                                price.compareTo(range.max) <= 0) {
-                            return true;
-                        }
-                    }
-                    return false;
-                });
+                // ----------- VARYANT BAZLI FİLTRELEME ------------
+                List<ProductVariant> matched = allVariants.stream()
+                        .filter(v -> {
 
+                            BigDecimal price = v.getPrice();
+
+                            // min-max price
+                            if (minPrice != null && price.compareTo(minPrice) < 0) return false;
+                            if (maxPrice != null && price.compareTo(maxPrice) > 0) return false;
+
+                            // price ranges
+                            return parsedRanges.isEmpty() ||
+                                    parsedRanges.stream().anyMatch(pr ->
+                                            price.compareTo(pr.min) >= 0 &&
+                                                    price.compareTo(pr.max) <= 0
+                                    );
+                        })
+                        .toList();
+
+                // Eğer bu ürünün filtreye uyan hiçbir varyantı yoksa → ürünü listeleme
+                if (matched.isEmpty()) continue;
+
+                // ---------- DTO OLUŞTUR ----------
+                ProductResponse dto = productMapper.toDTO(product);
+
+                // tüm varyantları ekle
+                dto = dto.withVariants(
+                        allVariants.stream()
+                                .map(productVariantMapper::toDTO)
+                                .toList()
+                );
+
+                // matchedVariants doldur
+                dto = dto.withMatchedVariants(
+                        matched.stream()
+                                .map(productVariantMapper::toDTO)
+                                .toList()
+                );
+
+                // selectedVariant → matched içerisindeki en ucuz varyant
+                ProductVariant selected = matched.stream()
+                        .min(Comparator.comparing(ProductVariant::getPrice))
+                        .orElseThrow();
+
+                dto = dto.withSelectedVariant(
+                         productVariantMapper.toDTO(selected)
+                );
+
+                result.add(dto);
             }
 
-            // 4) PRICE RANGES YOKSA → min/max KULLANILIR
-            else {
-
-                if (minPrice != null) {
-                    stream = stream.filter(product -> {
-                        BigDecimal price = product.getMinVariantPrice();
-                        return price != null && price.compareTo(minPrice) >= 0;
-                    });
-                }
-
-                if (maxPrice != null) {
-                    stream = stream.filter(product -> {
-                        BigDecimal price = product.getMinVariantPrice();
-                        return price != null && price.compareTo(maxPrice) <= 0;
-                    });
-                }
-            }
-
-            // 5) Map to DTO
-            return stream
-                    .map(productMapper::toDTO)
-                    .toList();
+            return result;
         }
 
 
