@@ -23,12 +23,11 @@ const SIZE_PRESETS = {
 
 export default function BaseProductCard({ product, size = "medium" }) {
     const preset = SIZE_PRESETS[size];
-
+    
     return (
         <div
             className={`bg-white  rounded-lg border border-gray-300 overflow-hidden flex flex-col cursor-pointer ${preset.wrapper}`}
         >
-           
             <div
                 className={`w-full flex items-center justify-center overflow-hidden ${preset.img}`}
             >
@@ -39,7 +38,6 @@ export default function BaseProductCard({ product, size = "medium" }) {
                 />
             </div>
 
-           
             <div className={`${preset.padding} flex flex-col grow`}>
                 <h2
                     className={`${preset.title} font-medium text-gray-900 mb-3 line-clamp-2 `}
@@ -49,7 +47,7 @@ export default function BaseProductCard({ product, size = "medium" }) {
 
                 <div className="flex items-baseline gap-1">
                     <span className="text-2xl font-bold text-blue-900">
-                        1224
+                        {product.selectedVariant?.price ?? 1224}
                     </span>
                     <span className="text-sm text-blue-900 font-medium">₺</span>
                 </div>

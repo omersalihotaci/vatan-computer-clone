@@ -16,7 +16,7 @@ function FilterBar({ categoryId, filterState }) {
       resetFilters,
   } = filterState;
   return (
-      <aside className="w-64 bg-white border border-gray-200 rounded-lg p-4 space-y-6 select-none">
+      <aside className="w-full bg-white border border-gray-200 rounded-lg p-4 space-y-6 select-none">
           {/* Başlık + Reset */}
           <div className="flex justify-between items-center">
               <h2 className="text-lg font-semibold">Filtreler</h2>

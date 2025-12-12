@@ -1,5 +1,6 @@
 import React from 'react'
 import { useFilteredProducts } from '../../hooks/useFilterApi';
+import FilterProductCard from '../product-card/FilterProductCard';
 
 function ProductListByCategory({categoryId, filterState}) {
   const { data: products } = useFilteredProducts(categoryId, {
@@ -12,7 +13,17 @@ function ProductListByCategory({categoryId, filterState}) {
   console.log(products);
   
   return (
-    <div>ProductListByCategory</div>
+    <div>
+      {products && products.length > 0 ? (
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 justify-items-center">
+          {products.map((product) => (
+            <FilterProductCard key={product.id} product={product} />
+          ))}
+        </div>
+      ) : (
+        <div>No products found</div>
+      )}
+    </div>
   )
 }
 

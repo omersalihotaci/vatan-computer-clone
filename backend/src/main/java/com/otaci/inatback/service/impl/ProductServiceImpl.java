@@ -5,6 +5,7 @@ import com.otaci.inatback.dto.ProductResponse;
 import com.otaci.inatback.dto.ProductVariantResponse;
 import com.otaci.inatback.entity.Category;
 import com.otaci.inatback.entity.Product;
+import com.otaci.inatback.entity.ProductVariant;
 import com.otaci.inatback.exception.custom.ConflictException;
 import com.otaci.inatback.exception.custom.ResourceNotFoundException;
 import com.otaci.inatback.mapper.ProductMapper;
@@ -12,6 +13,7 @@ import com.otaci.inatback.mapper.ProductVariantMapper;
 import com.otaci.inatback.repository.CategoryRepository;
 import com.otaci.inatback.repository.ProductRepository;
 import com.otaci.inatback.service.IProductService;
+import com.otaci.inatback.service.helper.ProductResponseFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,7 +28,7 @@ public class ProductServiceImpl implements IProductService {
     private final CategoryRepository categoryRepository;
     private final ProductMapper productMapper;
     private final ProductVariantMapper productVariantMapper;
-
+    private final ProductResponseFactory responseFactory;
     @Override
     @Transactional(readOnly = true)
     public ProductResponse getProductById(Long id) {
@@ -48,14 +50,24 @@ public class ProductServiceImpl implements IProductService {
     @Override
     public List<ProductResponse> getFeaturedProducts() {
         List<Product> products =productRepository.findByFeaturedTrue();
-        return productMapper.toDTOList(products);
+        return products.stream()
+                .map(product -> {
+                    List<ProductVariant> allVariants = product.getVariants();
+                    return responseFactory.build(product, allVariants);
+                })
+                .toList();
     }
 
     @Transactional(readOnly = true)
     @Override
     public List<ProductResponse> getBestSellerProducts() {
         List<Product> products =productRepository.findByBestSellerTrue();
-        return productMapper.toDTOList(products);
+        return products.stream()
+                .map(product -> {
+                    List<ProductVariant> allVariants = product.getVariants();
+                    return responseFactory.build(product, allVariants);
+                })
+                .toList();
     }
 
     @Transactional(readOnly = true)

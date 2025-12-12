@@ -6,9 +6,11 @@ import { RxHamburgerMenu } from "react-icons/rx";
 import logoB from "../../assets/logo/logoBlue.png";
 import logoW from "../../assets/logo/logoWhite.png";
 import { MdKeyboardArrowDown } from "react-icons/md";
+import { useNavigate } from "react-router-dom";
 
 function MainNavbar() {
     const [open, setOpen] = useState(false);
+    const navigate = useNavigate()
 
     return (
         <div className="flex items-center justify-between h-16  relative w-full px-6 lg:px-8 xl:px-42  lg:mt-4 ">
@@ -65,10 +67,16 @@ function MainNavbar() {
                         {/*  DROPDOWN (Butonun altına hizalı) */}
                         {open && (
                             <div className="absolute right-0 mt-2 w-40 bg-white border rounded-lg shadow-lg py-2 z-50">
-                                <button className="w-full text-left px-4 py-2 hover:bg-gray-100">
+                                <button
+                                    className="w-full text-left px-4 py-2 hover:bg-gray-100"
+                                    onClick={() =>{ setOpen(false); navigate("/auth?tab=login")}}
+                                >
                                     Giriş Yap
                                 </button>
-                                <button className="w-full text-left px-4 py-2 hover:bg-gray-100">
+                                <button
+                                    className="w-full text-left px-4 py-2 hover:bg-gray-100"
+                                    onClick={() =>{ setOpen(false); navigate("/auth?tab=register")}}
+                                >
                                     Kaydol
                                 </button>
                             </div>

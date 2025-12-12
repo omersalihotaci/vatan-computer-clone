@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { usePriceInterval } from '../../../hooks/useFilterApi';
+import { FaSearch } from "react-icons/fa";
 
 function PriceInterval({
     categoryId,
@@ -10,6 +11,8 @@ function PriceInterval({
     togglePriceRange,
 }) {
     const [open, setOpen] = useState(true);
+    const[localMinPrice, setLocalMinPrice] = useState(price.min || '');
+    const[localMaxPrice, setLocalMaxPrice] = useState(price.max || '');
     const { data: priceIntervals } = usePriceInterval(categoryId);
     
     return (
@@ -19,14 +22,14 @@ function PriceInterval({
                 className="flex justify-between items-center cursor-pointer"
                 onClick={() => setOpen((prev) => !prev)}
             >
-                <h3 className="font-semibold text-gray-900">Fiyat</h3>
+                <h3 className="font-semibold text-gray-800 text-md">Fiyat</h3>
                 <span className="text-xl">{open ? "−" : "+"}</span>
             </div>
 
             {open && (
                 <div className="mt-3 flex flex-col gap-4">
                     {/* --- Backend Price Ranges --- */}
-                    <div className="flex flex-col gap-2 max-h-48 overflow-y-auto">
+                    <div className="flex flex-col gap-2">
                         {priceIntervals?.map((range) => {
                             const key = `${range.from}-${range.to}`;
                             const checked = selectedRanges.includes(key);
@@ -57,7 +60,7 @@ function PriceInterval({
                                         ✓
                                     </span>
 
-                                    <span className="text-sm text-gray-800">
+                                    <span className="text-md text-gray-700">
                                         {range.from}₺ - {range.to}₺
                                     </span>
                                 </label>
@@ -66,22 +69,39 @@ function PriceInterval({
                     </div>
 
                     {/* --- Manual Min-Max Input --- */}
-                    <div className="flex items-center gap-3">
-                        <input
-                            type="number"
-                            placeholder="Min"
-                            className="w-full border rounded p-2 text-sm select-auto"
-                            value={price.min || ""}
-                            onChange={(e) => setMinPriceValue(e.target.value)}
-                        />
+                    <div className="flex gap-2 h-8">
+                        <div className="flex gap-2">
+                            <input
+                                type="number"
+                                placeholder="Min TL"
+                                className="w-full border border-gray-300 rounded-md p-2 text-sm select-auto bg-gray-100"
+                                value={localMinPrice || ""}
+                                onChange={(e) =>
+                                    setLocalMinPrice(e.target.value)
+                                }
+                            />
 
-                        <input
-                            type="number"
-                            placeholder="Max"
-                            className="w-full border rounded p-2 text-sm select-auto"
-                            value={price.max || ""}
-                            onChange={(e) => setMaxPriceValue(e.target.value)}
-                        />
+                            <input
+                                type="number"
+                                placeholder="Max TL"
+                                className="w-full border border-gray-300 rounded-md p-2 text-sm select-auto bg-gray-100"
+                                value={localMaxPrice || ""}
+                                onChange={(e) =>
+                                    setLocalMaxPrice(e.target.value)
+                                }
+                            />
+                        </div>
+                        <div>
+                            <button
+                                onClick={() => {
+                                    setMinPriceValue(localMinPrice);
+                                    setMaxPriceValue(localMaxPrice);
+                                }}
+                                className="w-full  rounded-md px-4 py-2  text-sm cursor-pointer flex items-center justify-center bg-gray-400"
+                            >
+                                <FaSearch className="text-white" />
+                            </button>
+                        </div>
                     </div>
                 </div>
             )}

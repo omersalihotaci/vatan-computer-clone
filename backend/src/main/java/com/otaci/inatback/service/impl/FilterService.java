@@ -11,6 +11,7 @@
     import com.otaci.inatback.repository.ProductRepository;
     import com.otaci.inatback.repository.ProductVariantRepository;
     import com.otaci.inatback.service.IFilterService;
+    import com.otaci.inatback.service.helper.ProductResponseFactory;
     import lombok.RequiredArgsConstructor;
     import org.springframework.stereotype.Service;
 
@@ -26,8 +27,7 @@
         private final CategoryRepository categoryRepository;
         private final ProductVariantRepository productVariantRepository;
         private final ProductRepository productRepository;
-        private final ProductMapper productMapper;
-        private final ProductVariantMapper productVariantMapper;
+        private final ProductResponseFactory responseFactory;
 
         private int determineBucketCount(double range) {
             if (range < 500) return 3;
@@ -169,33 +169,7 @@
                 // Eğer bu ürünün filtreye uyan hiçbir varyantı yoksa → ürünü listeleme
                 if (matched.isEmpty()) continue;
 
-                // ---------- DTO OLUŞTUR ----------
-                ProductResponse dto = productMapper.toDTO(product);
-
-                // tüm varyantları ekle
-                dto = dto.withVariants(
-                        allVariants.stream()
-                                .map(productVariantMapper::toDTO)
-                                .toList()
-                );
-
-                // matchedVariants doldur
-                dto = dto.withMatchedVariants(
-                        matched.stream()
-                                .map(productVariantMapper::toDTO)
-                                .toList()
-                );
-
-                // selectedVariant → matched içerisindeki en ucuz varyant
-                ProductVariant selected = matched.stream()
-                        .min(Comparator.comparing(ProductVariant::getPrice))
-                        .orElseThrow();
-
-                dto = dto.withSelectedVariant(
-                         productVariantMapper.toDTO(selected)
-                );
-
-                result.add(dto);
+                result.add(responseFactory.build(product, matched));
             }
 
             return result;

@@ -12,13 +12,13 @@ function Brands({ categoryId, selectedBrands, toggleBrand }) {
                 className="flex justify-between items-center cursor-pointer"
                 onClick={() => setOpen((prev) => !prev)}
             >
-                <h3 className="font-semibold text-gray-900">Markalar</h3>
+                <h3 className="font-semibold text-gray-800 text-md">Markalar</h3>
                 <span className="text-xl leading-none">{open ? "−" : "+"}</span>
             </div>
 
             {/* İçerik */}
             {open && (
-                <div className="flex flex-col gap-2 max-h-64 overflow-y-auto mt-2">
+                <div className="flex flex-col gap-2 max-h-64 mt-2">
                     {brands?.map((brand) => (
                         <label
                             key={brand}
@@ -47,7 +47,7 @@ function Brands({ categoryId, selectedBrands, toggleBrand }) {
                                 ✓
                             </span>
 
-                            <span className="text-sm text-gray-800">
+                            <span className="text-md text-gray-700">
                                 {brand}
                             </span>
                         </label>
