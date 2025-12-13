@@ -1,5 +1,7 @@
 package com.otaci.inatback.controller;
 
+import com.otaci.inatback.dto.AuthResponse;
+import com.otaci.inatback.dto.LoginRequest;
 import com.otaci.inatback.dto.RegisterRequest;
 import com.otaci.inatback.model.ApiResponse;
 import com.otaci.inatback.service.impl.AuthService;
@@ -8,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin(origins = "http://localhost:5176")
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 @RestController
@@ -19,7 +20,12 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<ApiResponse<Void>> register(@RequestBody RegisterRequest request) {
         authService.register(request);
-        return ResponseEntity.ok(ApiResponse.success(null, "Kayıt başarılı, lütfen e-posta adresinizi doğrulayın."));
+        return ResponseEntity.ok(ApiResponse.message( "Kayıt başarılı, lütfen e-posta adresinizi doğrulayın."));
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<ApiResponse<AuthResponse>> login(@RequestBody LoginRequest request) {
+        return ResponseEntity.ok(ApiResponse.success(authService.login(request)));
     }
 
     @GetMapping("/verify-email")

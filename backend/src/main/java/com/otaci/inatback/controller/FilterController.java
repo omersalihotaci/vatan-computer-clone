@@ -16,7 +16,6 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/categories/{categoryId}/filters")
-@CrossOrigin(origins = "http://localhost:5176")
 @Tag(name = "Filter API", description = "Ürün filtreleme işlemleri")
 public class FilterController {
     private final IFilterService filterService;

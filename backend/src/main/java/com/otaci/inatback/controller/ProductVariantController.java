@@ -18,7 +18,6 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
-@CrossOrigin(origins = "http://localhost:5176")
 @Tag(name = "Product Variant API", description = "Ürün varyant işlemleri")
 public class ProductVariantController {
 
