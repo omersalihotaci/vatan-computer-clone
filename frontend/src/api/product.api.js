@@ -12,6 +12,10 @@ export const ProductApi = {
     fetchBestSellerProducts: async () => {
         const res = await http.get("/products/bestSellers");
         return res.data.data;
+    },
+    fetchProductById: async (productId) => {
+        const res = await http.get(`/products/${productId}`);
+        return res.data.data;
     }
     
 };

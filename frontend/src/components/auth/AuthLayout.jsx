@@ -20,7 +20,7 @@ function AuthLayout() {
      }, [searchParams]);
 
     return (
-        <div className="flex items-center justify-center bg-gray-100 ">
+        <div className="flex justify-center bg-gray-100 pb-16">
             <div className="w-full max-w-[480px] bg-white rounded-lg shadow-md p-8 lg:mt-4  ">
                 <AuthTabs activeTab={activeTab} setActiveTab={setActiveTab} />
 

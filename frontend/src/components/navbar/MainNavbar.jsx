@@ -1,4 +1,3 @@
-import React, { useState } from "react";
 import { FiUser } from "react-icons/fi";
 import { IoSearch } from "react-icons/io5";
 import { AiOutlineShoppingCart } from "react-icons/ai";
@@ -6,12 +5,43 @@ import { RxHamburgerMenu } from "react-icons/rx";
 import logoB from "../../assets/logo/logoBlue.png";
 import logoW from "../../assets/logo/logoWhite.png";
 import { MdKeyboardArrowDown } from "react-icons/md";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/useAuth";
+import { useState, useRef, useEffect } from "react";
+
 
 function MainNavbar() {
     const [open, setOpen] = useState(false);
     const navigate = useNavigate()
+    const { user, logout } = useAuth();
+    const dropdownRef = useRef(null);
 
+
+    const handleLogout = () => {
+        logout();
+        setOpen(false);
+        navigate("/auth?tab=login",{ replace: true });
+    };
+
+
+    useEffect(() => {
+        const handleClickOutside = (e) => {
+            if (
+                dropdownRef.current &&
+                !dropdownRef.current.contains(e.target)
+            ) {
+                setOpen(false);
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
+
+    
     return (
         <div className="flex items-center justify-between h-16  relative w-full px-6 lg:px-8 xl:px-42  lg:mt-4 ">
             {/* Mobile hamburger menu */}
@@ -21,7 +51,7 @@ function MainNavbar() {
 
             {/* Logo */}
             <div className="absolute left-1/2 -translate-x-1/2 lg:static lg:translate-x-0 shrink-0  lg:mr-8 ">
-                <a href="/">
+                <Link to="/">
                     <img
                         className="lg:hidden w-[108px] h-auto shrink-0"
                         src={logoB}
@@ -32,12 +62,12 @@ function MainNavbar() {
                         src={logoW}
                         alt="Vatan Logo"
                     />
-                </a>
+                </Link>
             </div>
 
             {/* Desktop search and buttons */}
             <div className="hidden lg:flex items-center justify-end flex-1 gap-8">
-                {/* Search input - sağ tarafa yakın */}
+                {/* Search input*/}
                 <div className="relative max-w-md flex-1">
                     <input
                         type="text"
@@ -54,31 +84,63 @@ function MainNavbar() {
                 {/* Buttons */}
                 <div className="flex items-center gap-4 shrink-0">
                     {/* BUTTON + DROPDOWN WRAPPER */}
-                    <div className="relative">
+                    <div ref={dropdownRef} className="relative">
                         <button
                             onClick={() => setOpen(!open)}
                             className="flex items-center justify-between px-6 py-2 gap-2 bg-cardBorder rounded-full hover:bg-gray-200 transition-colors"
                         >
                             <FiUser className="text-black" size={18} />
-                            <span className="whitespace-nowrap">Giriş Yap</span>
+                            <span className="whitespace-nowrap">
+                                {user
+                                    ? `Merhaba ${user.fullName}`
+                                    : "Giriş Yap"}
+                            </span>
                             <MdKeyboardArrowDown size={18} />
                         </button>
 
                         {/*  DROPDOWN (Butonun altına hizalı) */}
                         {open && (
-                            <div className="absolute right-0 mt-2 w-40 bg-white border rounded-lg shadow-lg py-2 z-50">
-                                <button
-                                    className="w-full text-left px-4 py-2 hover:bg-gray-100"
-                                    onClick={() =>{ setOpen(false); navigate("/auth?tab=login")}}
-                                >
-                                    Giriş Yap
-                                </button>
-                                <button
-                                    className="w-full text-left px-4 py-2 hover:bg-gray-100"
-                                    onClick={() =>{ setOpen(false); navigate("/auth?tab=register")}}
-                                >
-                                    Kaydol
-                                </button>
+                            <div className="absolute right-0 mt-2 w-44 bg-white border rounded-lg shadow-lg py-2 z-50">
+                                {!user ? (
+                                    <>
+                                        <button
+                                            className="w-full text-left px-4 py-2 hover:bg-gray-100"
+                                            onClick={() => {
+                                                setOpen(false);
+                                                navigate("/auth?tab=login");
+                                            }}
+                                        >
+                                            Giriş Yap
+                                        </button>
+                                        <button
+                                            className="w-full text-left px-4 py-2 hover:bg-gray-100"
+                                            onClick={() => {
+                                                setOpen(false);
+                                                navigate("/auth?tab=register");
+                                            }}
+                                        >
+                                            Kaydol
+                                        </button>
+                                    </>
+                                ) : (
+                                    <>
+                                        <button
+                                            className="w-full text-left px-4 py-2 hover:bg-gray-100"
+                                            onClick={() => {
+                                                setOpen(false);
+                                                navigate("/profile");
+                                            }}
+                                        >
+                                            Profilim
+                                        </button>
+                                        <button
+                                            className="w-full text-left px-4 py-2 text-red-600 hover:bg-gray-100"
+                                            onClick={handleLogout}
+                                        >
+                                            Çıkış Yap
+                                        </button>
+                                    </>
+                                )}
                             </div>
                         )}
                     </div>

@@ -1,14 +1,43 @@
 import { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { useRegister } from "../../hooks/useAuthMutations";
+import { useNavigate } from "react-router-dom";
 
 export default function RegisterForm() {
+    const navigate = useNavigate();
     const [showPassword, setShowPassword] = useState(false);
     const [kvkkAccepted, setKvkkAccepted] = useState(false);
+    const [fullName, setFullName] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [gender, setGender] = useState("");
+    const { mutate, isPending } = useRegister();
+
+    const handleRegister = () => {
+        if (!kvkkAccepted) return;
+
+        mutate(
+            {
+                fullName,
+                email,
+                password,
+                gender,
+            },
+            {
+                onSuccess: () => {
+                    // register başarılı → login tab’ına geç
+                    navigate("/auth?tab=login", { replace: true });
+                },
+            }
+        );
+    };
 
     return (
         <div className="space-y-5">
             {/* Ad Soyad */}
             <input
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
                 type="text"
                 placeholder="Ad Soyad"
                 className="w-full h-12 px-4 rounded-lg bg-gray-100 outline-none focus:ring-2 focus:ring-blue-900"
@@ -16,6 +45,8 @@ export default function RegisterForm() {
 
             {/* Email */}
             <input
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 type="email"
                 placeholder="E-mail"
                 className="w-full h-12 px-4 rounded-lg bg-gray-100 outline-none focus:ring-2 focus:ring-blue-900"
@@ -24,6 +55,8 @@ export default function RegisterForm() {
             {/* Şifre */}
             <div className="relative">
                 <input
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                     type={showPassword ? "text" : "password"}
                     placeholder="Şifre"
                     className="w-full h-12 px-4 pr-10 rounded-lg bg-gray-100 outline-none focus:ring-2 focus:ring-blue-900"
@@ -39,6 +72,8 @@ export default function RegisterForm() {
 
             {/* Cinsiyet */}
             <select
+                value={gender}
+                onChange={(e) => setGender(e.target.value)}
                 className="w-full h-12 px-4 rounded-lg bg-gray-100 outline-none focus:ring-2 focus:ring-blue-900 text-gray-600"
                 defaultValue=""
             >
@@ -66,7 +101,8 @@ export default function RegisterForm() {
 
             {/* Üyeliği Tamamla */}
             <button
-                disabled={!kvkkAccepted}
+                onClick={handleRegister}
+                disabled={!kvkkAccepted || isPending}
                 className={`w-full h-12 font-semibold rounded-lg transition
                     ${
                         kvkkAccepted
@@ -74,7 +110,7 @@ export default function RegisterForm() {
                             : "bg-gray-300 text-gray-500 cursor-not-allowed"
                     }`}
             >
-                Üyeliği Tamamla
+                {isPending ? "Kaydediliyor..." : "Üyeliği Tamamla"}
             </button>
         </div>
     );

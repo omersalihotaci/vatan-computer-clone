@@ -5,8 +5,6 @@
     import com.otaci.inatback.entity.Product;
     import com.otaci.inatback.entity.ProductVariant;
     import com.otaci.inatback.exception.custom.ResourceNotFoundException;
-    import com.otaci.inatback.mapper.ProductMapper;
-    import com.otaci.inatback.mapper.ProductVariantMapper;
     import com.otaci.inatback.repository.CategoryRepository;
     import com.otaci.inatback.repository.ProductRepository;
     import com.otaci.inatback.repository.ProductVariantRepository;
@@ -17,12 +15,11 @@
 
     import java.math.BigDecimal;
     import java.util.ArrayList;
-    import java.util.Comparator;
     import java.util.List;
 
     @Service
     @RequiredArgsConstructor
-    public class FilterService implements IFilterService {
+    public class FilterServiceImpl implements IFilterService {
 
         private final CategoryRepository categoryRepository;
         private final ProductVariantRepository productVariantRepository;

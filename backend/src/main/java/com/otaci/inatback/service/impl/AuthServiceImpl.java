@@ -16,13 +16,15 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class AuthService {
+public class AuthServiceImpl {
 
     private final UserRepository userRepository;
     private final EmailVerificationTokenRepository tokenRepository;
@@ -38,6 +40,26 @@ public class AuthService {
         token.setUsed(false);
         return token;
     }
+
+    @Transactional(readOnly = true)
+    public User getCurrentUser() {
+
+        Authentication authentication =
+                SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new RuntimeException("Unauthenticated user");
+        }
+
+        String email = authentication.getName();
+        // JWT subject = email varsayımı (senin login akışına göre DOĞRU)
+
+        return userRepository.findByEmail(email)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("User not found: " + email)
+                );
+    }
+
 
     @Transactional
         public void register(RegisterRequest request) {

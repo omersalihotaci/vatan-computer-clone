@@ -3,7 +3,11 @@ import { Link } from "react-router-dom";
 
 export default function FeaturedProductCard({ product }) {
     return (
-        <Link to={`/product/${product.id}`} key={product.id}>
+        <Link
+            to={`/product/${product.id}`}
+            key={product.id}
+            state={{ selectedVariantId: product.selectedVariant.id }}
+        >
             <BaseProductCard product={product} size="large" />
         </Link>
     );
