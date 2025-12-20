@@ -18,9 +18,8 @@ public class AuthController {
     private final AuthServiceImpl authServiceImpl;
 
     @PostMapping("/register")
-    public ResponseEntity<ApiResponse<Void>> register(@RequestBody RegisterRequest request) {
-        authServiceImpl.register(request);
-        return ResponseEntity.ok(ApiResponse.message( "Kayıt başarılı, lütfen e-posta adresinizi doğrulayın."));
+    public ResponseEntity<ApiResponse<AuthResponse>> register(@RequestBody RegisterRequest request) {
+        return ResponseEntity.ok(ApiResponse.success(authServiceImpl.register(request)));
     }
 
     @PostMapping("/login")
@@ -28,14 +27,4 @@ public class AuthController {
         return ResponseEntity.ok(ApiResponse.success(authServiceImpl.login(request)));
     }
 
-    @GetMapping("/verify-email")
-    public ResponseEntity<ApiResponse<Void>> verifyEmail(
-            @RequestParam String token
-    ) {
-        authServiceImpl.verifyEmail(token);
-
-        return ResponseEntity.ok(
-                ApiResponse.success(null, "E-posta adresiniz başarıyla doğrulandı.")
-        );
-    }
 }

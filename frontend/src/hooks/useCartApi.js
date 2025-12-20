@@ -1,5 +1,6 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { cartApi } from "../api/cart.api";
+
 
 export const useAddToCart = () => {
     return useMutation({
@@ -8,3 +9,8 @@ export const useAddToCart = () => {
         retry: 0,
     });
 };
+export const useCart = () => 
+   useQuery({
+        queryKey: ["cart"],
+        queryFn: cartApi.getMyCart,
+    });

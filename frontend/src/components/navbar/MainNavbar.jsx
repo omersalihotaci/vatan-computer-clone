@@ -145,7 +145,9 @@ function MainNavbar() {
                         )}
                     </div>
 
-                    <button className="flex items-center justify-between px-6 py-2 gap-2 bg-cardBorder rounded-full hover:bg-gray-200 transition-colors">
+                    <button
+                        onClick={()=>navigate("/cart")}
+                        className="flex items-center justify-between px-6 py-2 gap-2 bg-cardBorder rounded-full hover:bg-gray-200 transition-colors">
                         <AiOutlineShoppingCart
                             className="text-black"
                             size={18}

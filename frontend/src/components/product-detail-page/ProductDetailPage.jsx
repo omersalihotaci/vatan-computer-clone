@@ -8,7 +8,8 @@ export default function ProductDetailPage() {
     const { id } = useParams();
     const location = useLocation();
     console.log("LOCATION STATE:", location.state);
-    const preSelectedVariantId = location.state?.selectedVariantId;    const { data:product, isLoading, isError } = useProductById(id);
+    const preSelectedVariantId = location.state?.selectedVariantId;
+    const { data: product, isLoading, isError } = useProductById(id);
     const [selectedVariant, setSelectedVariant] = useState(null);
 
     useEffect(() => {

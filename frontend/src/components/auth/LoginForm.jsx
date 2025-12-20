@@ -3,34 +3,55 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { useLogin } from "../../hooks/useAuthMutations";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/useAuth";
+import { useLocation } from "react-router-dom";
 
 export default function LoginForm() {
+    const location = useLocation();
+    const message = location.state?.message;
+    const from = location.state?.from || "/";
     const navigate = useNavigate();
     const [showPassword, setShowPassword] = useState(false);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [errorMessage, setErrorMessage] = useState("");
 
     const { mutate, isPending } = useLogin();
 
     const { login } = useAuth();
 
     const handleLogin = () => {
-        mutate(
-            {
-                email,
-                password,
-            },
-            {
-                onSuccess: (data) => {
-                    login(data);
-                    navigate("/", { replace: true });
-                },
-            }
-        );
+        setErrorMessage("");
+       mutate(
+           { email, password },
+           {
+               onSuccess: (data) => {
+                   login(data);
+                   navigate(from, { replace: true });
+               },
+               onError: (error) => {
+                   const backendMessage = error?.response?.data?.message;
+                   setErrorMessage(
+                       backendMessage || "E-posta veya şifre hatalı"
+                   );
+               },
+           }
+       );
     };
 
     return (
         <div className="space-y-5">
+            {message && (
+                <div className="mb-4 rounded-lg bg-blue-50 border border-blue-200 text-blue-700 px-4 py-3 text-sm">
+                    {message}
+                </div>
+            )}
+            {/* Error Message */}
+            {errorMessage && (
+                <div className="rounded-lg bg-red-50 border border-red-200 text-red-700 px-4 py-3 text-sm">
+                    {errorMessage}
+                </div>
+            )}
+
             {/* Email */}
             <input
                 value={email}

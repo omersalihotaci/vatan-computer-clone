@@ -24,3 +24,9 @@
     -moz-appearance: textfield;
   }
 }
+.input {
+    @apply w-full bg-gray-50 border border-gray-300 rounded-lg p-2
+           outline-none transition
+           focus:ring-2 focus:ring-blue-900 focus:border-blue-900;
+}
+

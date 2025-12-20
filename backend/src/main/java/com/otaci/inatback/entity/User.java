@@ -2,14 +2,14 @@ package com.otaci.inatback.entity;
 
 import com.otaci.inatback.model.Gender;
 import com.otaci.inatback.model.Role;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -34,7 +34,8 @@ public class User extends BaseEntity{
     @Column(nullable = false)
     private Role role;
 
-    @Column(nullable = false)
-    private boolean enabled = false;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Address> addresses = new ArrayList<>();
 
 }

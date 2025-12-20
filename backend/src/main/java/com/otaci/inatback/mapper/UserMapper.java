@@ -10,7 +10,6 @@ public interface UserMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "password", ignore = true)
     @Mapping(target = "role", ignore = true)
-    @Mapping(target = "enabled", constant = "false")
     User toEntity(RegisterRequest request);
 }
 

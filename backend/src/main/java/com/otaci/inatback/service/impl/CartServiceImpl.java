@@ -1,5 +1,7 @@
 package com.otaci.inatback.service.impl;
 
+import com.otaci.inatback.dto.CartItemResponse;
+import com.otaci.inatback.dto.CartResponse;
 import com.otaci.inatback.entity.Cart;
 import com.otaci.inatback.entity.CartItem;
 import com.otaci.inatback.entity.ProductVariant;
@@ -8,9 +10,13 @@ import com.otaci.inatback.repository.CartItemRepository;
 import com.otaci.inatback.repository.CartRepository;
 import com.otaci.inatback.repository.ProductVariantRepository;
 import com.otaci.inatback.service.ICartService;
+import com.otaci.inatback.service.helper.CartItemAssembler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.math.BigDecimal;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -20,6 +26,7 @@ public class CartServiceImpl implements ICartService {
     private final CartItemRepository cartItemRepository;
     private final ProductVariantRepository productVariantRepository;
     private final AuthServiceImpl authService;
+    private final CartItemAssembler cartItemAssembler;
 
     @Override
     public void addToCart(Long variantId, int quantity) {
@@ -65,4 +72,33 @@ public class CartServiceImpl implements ICartService {
         // 6️⃣ Kaydet
         cartRepository.save(cart);
     }
+
+    @Override
+    public CartResponse getMyCart() {
+        User user = authService.getCurrentUser();
+        Cart cart = cartRepository.findByUser(user)
+                .orElseThrow(() ->
+                        new RuntimeException("Cart not found for user: " + user.getEmail())
+                );
+
+        List<CartItemResponse> items = cart.getItems().stream()
+                .map(cartItemAssembler::toResponse)
+                .toList();
+
+        BigDecimal cartTotal = items.stream()
+                .map(CartItemResponse::totalPrice)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        int itemCount = items.stream()
+                .mapToInt(CartItemResponse::quantity)
+                .sum();
+
+        return new CartResponse(
+                cart.getId(),
+                itemCount,
+                cartTotal,
+                items
+        );
+
     }
+}
