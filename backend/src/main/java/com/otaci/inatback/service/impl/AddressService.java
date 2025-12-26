@@ -68,5 +68,27 @@ public class AddressService {
 
         addressRepository.delete(address);
     }
+    public AddressResponse updateAddress(
+            Long addressId,
+            AddressCreateRequest request,
+            Long userId
+    ) {
+        Address address = addressRepository
+                .findByIdAndUserId(addressId, userId)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Address not found"));
 
+        address.setTitle(request.title());
+        address.setFullName(request.fullName());
+        address.setPhone(request.phone());
+        address.setCity(request.city());
+        address.setDistrict(request.district());
+        address.setNeighborhood(request.neighborhood());
+        address.setAddressLine(request.addressLine());
+        address.setPostalCode(request.postalCode());
+
+        addressRepository.save(address);
+
+        return mapToResponse(address);
+    }
 }

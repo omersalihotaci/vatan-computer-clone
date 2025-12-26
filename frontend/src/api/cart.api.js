@@ -9,4 +9,12 @@ export const cartApi = {
         const res = await http.get("/cart");
         return res.data.data;
     },
+    deleteCartItem: async (itemId) => {
+        const res = await http.delete(`/cart/${itemId}`);
+        return res.data.data;
+    },
+    deleteCart: async () => {
+        const res = await http.delete("/cart");
+        return res.data.data;
+    },  
 };

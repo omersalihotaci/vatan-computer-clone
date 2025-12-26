@@ -1,9 +1,11 @@
-import { useState } from "react";
-import { useAddAddress } from "../../hooks/useAddresses";
+import { useEffect, useState } from "react";
+import { useAddAddress, useUpdateAddress } from "../../hooks/useAddresses";
 
-export default function AddAddressModal({ onClose }) {
-    const { mutate, isPending } = useAddAddress();
+export default function AddAddressModal({ onClose, editAddress }) {
+    const isEdit = Boolean(editAddress);
 
+    const { mutate: addAddress, isPending:isAdding } = useAddAddress();
+    const { mutate: updateAddress, isPending:isUpdating } = useUpdateAddress();
     const [form, setForm] = useState({
         title: "",
         fullName: "",
@@ -14,6 +16,31 @@ export default function AddAddressModal({ onClose }) {
         addressLine: "",
         postalCode: "",
     });
+    useEffect(() => {
+        if (editAddress) {
+            setForm({
+                title: editAddress.title || "",
+                fullName: editAddress.fullName || "",
+                phone: editAddress.phone || "",
+                city: editAddress.city || "",
+                district: editAddress.district || "",
+                neighborhood: editAddress.neighborhood || "",
+                addressLine: editAddress.addressLine || "",
+                postalCode: editAddress.postalCode || "",
+            });
+        } else {
+            setForm({
+                title: "",
+                fullName: "",
+                phone: "",
+                city: "",
+                district: "",
+                neighborhood: "",
+                addressLine: "",
+                postalCode: "",
+            });
+        }
+    }, [editAddress]);
 
     const handleChange = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value });
@@ -34,15 +61,24 @@ export default function AddAddressModal({ onClose }) {
         !form.addressLine;
 
     const handleSubmit = () => {
-        mutate(form, {
-            onSuccess: onClose,
-        });
+       if (isEdit) {
+           updateAddress(
+               { id: editAddress.id, ...form },
+               { onSuccess: onClose }
+           );
+       } else {
+           addAddress(form, {
+               onSuccess: onClose,
+           });
+       }
     };
 
     return (
         <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center">
             <div className="bg-white w-full max-w-lg rounded-xl p-6 space-y-4   max-h-[90vh] overflow-y-auto">
-                <h3 className="text-xl font-semibold">Yeni Adres Ekle</h3>
+                <h3 className="text-xl font-semibold">
+                    {isEdit ? "Adresi Düzenle" : "Yeni Adres Ekle"}
+                </h3>
 
                 {/* Adres Başlığı */}
                 <Field label="Adres Başlığı">
@@ -139,7 +175,7 @@ export default function AddAddressModal({ onClose }) {
                         İptal
                     </button>
                     <button
-                        disabled={isDisabled || isPending}
+                        disabled={isDisabled || isAdding || isUpdating}
                         onClick={handleSubmit}
                         className={`px-5 py-2 rounded-lg text-white ${
                             isDisabled
@@ -147,7 +183,7 @@ export default function AddAddressModal({ onClose }) {
                                 : "bg-blue-900 hover:bg-blue-800"
                         }`}
                     >
-                        Kaydet
+                        {isEdit ? "Kaydet" : "Adres Ekle"}
                     </button>
                 </div>
             </div>

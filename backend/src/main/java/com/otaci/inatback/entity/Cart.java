@@ -25,4 +25,8 @@ public class Cart extends BaseEntity{
             orphanRemoval = true
     )
     private List<CartItem> items = new ArrayList<>();
+
+    public void clearItems() {
+        items.clear();
+    }
 }

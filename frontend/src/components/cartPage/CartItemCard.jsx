@@ -1,4 +1,8 @@
+import { RiDeleteBin6Line } from "react-icons/ri";
+import { useDeleteCartItem } from "../../hooks/useCartApi";
+
 export function CartItemCard({ item }) {
+    const deleteCartItem = useDeleteCartItem();
     return (
         <div className="bg-white rounded-lg border p-4 flex gap-4">
             <img
@@ -20,10 +24,10 @@ export function CartItemCard({ item }) {
                     </div>
                 )}
 
-                <div className="mt-4 flex items-center gap-3">
-                    <button className="border px-2">-</button>
+                <div className="mt-4 flex justify-between items-center w-24 h-10 border border-gray-400 rounded text-lg">
+                    <button className=" px-2 text-2xl">-</button>
                     <span>{item.quantity}</span>
-                    <button className="border px-2">+</button>
+                    <button className=" px-2 text-2xl">+</button>
                 </div>
             </div>
 
@@ -31,7 +35,11 @@ export function CartItemCard({ item }) {
                 <p className="text-blue-900 font-semibold">
                     {item.totalPrice.toLocaleString("tr-TR")} TL
                 </p>
-                <button className="text-gray-400 mt-4">🗑</button>
+                <button
+                    onClick={() => deleteCartItem.mutate(item.cartItemId)}
+                    className="text-gray-800 text-xl mt-4">
+                    <RiDeleteBin6Line />
+                </button>
             </div>
         </div>
     );

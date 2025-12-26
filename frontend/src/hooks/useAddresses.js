@@ -26,3 +26,14 @@ export const useDeleteAddress = () => {
         },
     });
 };
+export const useUpdateAddress = () => {
+    const queryClient = useQueryClient();
+    return useMutation({
+        mutationFn: AdressApi.updateAdress,
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: ["addresses"],
+            });
+        },
+    });
+};

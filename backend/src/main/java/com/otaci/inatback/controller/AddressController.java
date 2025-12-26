@@ -4,6 +4,7 @@ import com.otaci.inatback.dto.AddressCreateRequest;
 import com.otaci.inatback.dto.AddressResponse;
 import com.otaci.inatback.model.ApiResponse;
 import com.otaci.inatback.service.impl.AddressService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -44,6 +45,15 @@ public class AddressController {
         Long userId = jwt.getClaim("userId");
         addressService.deleteAddress(id, userId);
         return ResponseEntity.ok(ApiResponse.message("address deleted"));
+    }
+    @PutMapping("/{AddressId}")
+    public ResponseEntity<ApiResponse<AddressResponse>> updateAddress(
+            @PathVariable Long AddressId,
+           @Valid @RequestBody AddressCreateRequest request,
+            @AuthenticationPrincipal Jwt jwt
+    ) {
+        Long userId = jwt.getClaim("userId");
+        return ResponseEntity.ok(ApiResponse.success(addressService.updateAddress(AddressId, request, userId),"Address updated successfully"));
     }
 
 }

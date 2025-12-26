@@ -29,4 +29,16 @@ public class CartController {
     public ResponseEntity<ApiResponse<CartResponse>> getCart() {
         return ResponseEntity.ok(ApiResponse.success(cartService.getMyCart()));
     }
+    @DeleteMapping("/{cartItemId}")
+    public ResponseEntity<ApiResponse<Void>> deleteCard(@PathVariable Long cartItemId) {
+       cartService.deleteCart(cartItemId);
+        return ResponseEntity.ok(ApiResponse.message("Sepet temizlendi."));
+    }
+    @DeleteMapping
+    public ResponseEntity<ApiResponse<Void>> clearCart() {
+        cartService.clearCart();
+        return ResponseEntity.ok(
+                ApiResponse.message("Sepet temizlendi.")
+        );
+    }
 }

@@ -6,6 +6,7 @@ import com.otaci.inatback.entity.Cart;
 import com.otaci.inatback.entity.CartItem;
 import com.otaci.inatback.entity.ProductVariant;
 import com.otaci.inatback.entity.User;
+import com.otaci.inatback.exception.custom.ResourceNotFoundException;
 import com.otaci.inatback.repository.CartItemRepository;
 import com.otaci.inatback.repository.CartRepository;
 import com.otaci.inatback.repository.ProductVariantRepository;
@@ -77,9 +78,16 @@ public class CartServiceImpl implements ICartService {
     public CartResponse getMyCart() {
         User user = authService.getCurrentUser();
         Cart cart = cartRepository.findByUser(user)
-                .orElseThrow(() ->
-                        new RuntimeException("Cart not found for user: " + user.getEmail())
-                );
+                .orElse(null);
+        if (cart == null) {
+            return new CartResponse(
+                    null,
+                    0,
+                    BigDecimal.ZERO,
+                    List.of()
+            );
+        }
+
 
         List<CartItemResponse> items = cart.getItems().stream()
                 .map(cartItemAssembler::toResponse)
@@ -100,5 +108,34 @@ public class CartServiceImpl implements ICartService {
                 items
         );
 
+    }
+
+    @Override
+    public void deleteCart(Long cartItemId) {
+        User user = authService.getCurrentUser();
+        CartItem cartItem = cartItemRepository.findById(cartItemId)
+                .orElseThrow(() -> new ResourceNotFoundException("Cart item not found with id: " + cartItemId));
+      if (!cartItem.getCart().getUser().getId().equals(user.getId())) {
+        throw new RuntimeException("This cart item does not belong to the user's cart");
+      }
+        Cart cart = cartItem.getCart();
+        cart.getItems().remove(cartItem);
+        cartItemRepository.delete(cartItem);
+        if (cart.getItems().isEmpty()) {
+            cartRepository.delete(cart);
+        }
+    }
+
+    @Override
+    public void clearCart() {
+        User user = authService.getCurrentUser(); // 👈 USER BURADAN
+
+        Cart cart = cartRepository.findByUser(user)
+                .orElse(null);
+
+        if (cart == null) {
+            return;
+        }
+        cart.clearItems();
     }
 }

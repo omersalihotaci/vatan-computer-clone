@@ -13,4 +13,8 @@ export const AdressApi = {
     deleteAddress: async (id) => {
         await http.delete(`/addresses/${id}`);
     },
+    updateAdress: async ({ id, ...payload }) => {
+        const res = await http.put(`/addresses/${id}`, payload);
+        return res.data.data;
+    },
 };

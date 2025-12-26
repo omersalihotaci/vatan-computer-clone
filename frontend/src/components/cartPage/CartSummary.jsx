@@ -1,5 +1,5 @@
 import { useNavigate, useLocation } from "react-router-dom";
-import { useCart } from "../../hooks/useCartApi";
+import { useCart, useDeleteCart } from "../../hooks/useCartApi";
 import { useCheckout } from "../../hooks/useCheckout";
 
 export function CartSummary() {
@@ -7,6 +7,7 @@ export function CartSummary() {
     const location = useLocation();
     const { data: cart } = useCart();
     const { selectedAddressId } = useCheckout();
+    const {mutate: deleteCart} = useDeleteCart();
 
     if (!cart) return null;
 
@@ -14,16 +15,21 @@ export function CartSummary() {
     const araToplam = cart.cartTotal - kdv;
 
     const isShippingPage = location.pathname === "/checkout/shipping";
+    const isPaymentPage = location.pathname === "/checkout/payment";
     const canContinue = !isShippingPage || Boolean(selectedAddressId);
 
     const handleClick = () => {
         if (isShippingPage) {
             if (!selectedAddressId) return;
             navigate("/checkout/payment");
+        } else if (isPaymentPage) {
+            deleteCart();
+            navigate("/payment-success");
         } else {
             navigate("/checkout/shipping");
-        }
+     }
     };
+
 
     return (
         <div className="bg-white border rounded-lg p-6 sticky top-6">
@@ -56,7 +62,7 @@ export function CartSummary() {
                     }
                 `}
             >
-                {isShippingPage ? "Teslimatı Onayla →" : "Sepeti Onayla →"}
+                {isShippingPage ? "Teslimatı Onayla →" : isPaymentPage ? "Siparişi Onayla →" : "Sepeti Onayla →"}
             </button>
 
             {isShippingPage && !selectedAddressId && (
