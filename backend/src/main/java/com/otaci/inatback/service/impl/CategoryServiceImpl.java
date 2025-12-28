@@ -75,6 +75,21 @@ public class CategoryServiceImpl implements ICategoryService {
             category.setDeletedAt(LocalDateTime.now());
 
         }
+    public List<Long> getAllLeafCategoryIdsFromCategoryIds(List<Long> categoryIds) {
+
+        if (categoryIds == null || categoryIds.isEmpty()) {
+            return List.of();
+        }
+
+        List<Long> result = new ArrayList<>();
+
+        for (Long categoryId : categoryIds) {
+            result.addAll(getAllLeafCategoryIds(categoryId));
+        }
+
+        return result.stream().distinct().toList();
+    }
+
 
     @Override
     public List<Long> getAllLeafCategoryIds(Long categoryId) {

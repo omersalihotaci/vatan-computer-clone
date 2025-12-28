@@ -1,9 +1,11 @@
-import React, { useState } from 'react'
-import { usePriceInterval } from '../../../hooks/useFilterApi';
+import React, { useState } from "react";
+import { usePriceInterval } from "../../../hooks/useFilterApi";
 import { FaSearch } from "react-icons/fa";
 
 function PriceInterval({
+    mode,
     categoryId,
+    searchContext,
     price,
     setMinPriceValue,
     setMaxPriceValue,
@@ -11,10 +13,21 @@ function PriceInterval({
     togglePriceRange,
 }) {
     const [open, setOpen] = useState(true);
-    const[localMinPrice, setLocalMinPrice] = useState(price.min || '');
-    const[localMaxPrice, setLocalMaxPrice] = useState(price.max || '');
-    const { data: priceIntervals } = usePriceInterval(categoryId);
-    
+    const [localMinPrice, setLocalMinPrice] = useState(price.min || "");
+    const [localMaxPrice, setLocalMaxPrice] = useState(price.max || "");
+
+    // ✅ HOOK HER ZAMAN ÇAĞRILIR (RULES OF HOOKS OK)
+    // API sadece CATEGORY modunda çalışır
+    const { data: categoryIntervals } = usePriceInterval(categoryId, {
+        enabled: mode === "CATEGORY" && !!categoryId,
+    });
+
+    // ✅ MODE’A GÖRE KAYNAK SEÇİMİ
+    const priceIntervals =
+        mode === "SEARCH"
+            ? searchContext?.availablePriceRanges || []
+            : categoryIntervals || [];
+
     return (
         <div className="border-b pb-4">
             {/* Header */}
@@ -28,9 +41,9 @@ function PriceInterval({
 
             {open && (
                 <div className="mt-3 flex flex-col gap-4">
-                    {/* --- Backend Price Ranges --- */}
+                    {/* Price Ranges */}
                     <div className="flex flex-col gap-2">
-                        {priceIntervals?.map((range) => {
+                        {priceIntervals.map((range) => {
                             const key = `${range.from}-${range.to}`;
                             const checked = selectedRanges.includes(key);
 
@@ -46,17 +59,7 @@ function PriceInterval({
                                         onChange={() => togglePriceRange(range)}
                                     />
 
-                                    <span
-                                        className="
-                      w-5 h-5 rounded border
-                      flex items-center justify-center 
-                      peer-checked:bg-blue-600
-                      peer-checked:border-blue-600
-                      peer-checked:text-white
-                      text-transparent border-gray-400
-                      transition
-                    "
-                                    >
+                                    <span className="w-5 h-5 rounded border flex items-center justify-center peer-checked:bg-blue-600 peer-checked:border-blue-600 peer-checked:text-white text-transparent border-gray-400 transition">
                                         ✓
                                     </span>
 
@@ -68,40 +71,33 @@ function PriceInterval({
                         })}
                     </div>
 
-                    {/* --- Manual Min-Max Input --- */}
+                    {/* Manual Min-Max */}
                     <div className="flex gap-2 h-8">
-                        <div className="flex gap-2">
-                            <input
-                                type="number"
-                                placeholder="Min TL"
-                                className="w-full border border-gray-300 rounded-md p-2 text-sm select-auto bg-gray-100"
-                                value={localMinPrice || ""}
-                                onChange={(e) =>
-                                    setLocalMinPrice(e.target.value)
-                                }
-                            />
+                        <input
+                            type="number"
+                            placeholder="Min TL"
+                            className="w-full border border-gray-300 rounded-md p-2 text-sm bg-gray-100"
+                            value={localMinPrice}
+                            onChange={(e) => setLocalMinPrice(e.target.value)}
+                        />
 
-                            <input
-                                type="number"
-                                placeholder="Max TL"
-                                className="w-full border border-gray-300 rounded-md p-2 text-sm select-auto bg-gray-100"
-                                value={localMaxPrice || ""}
-                                onChange={(e) =>
-                                    setLocalMaxPrice(e.target.value)
-                                }
-                            />
-                        </div>
-                        <div>
-                            <button
-                                onClick={() => {
-                                    setMinPriceValue(localMinPrice);
-                                    setMaxPriceValue(localMaxPrice);
-                                }}
-                                className="w-full  rounded-md px-4 py-2  text-sm cursor-pointer flex items-center justify-center bg-gray-400"
-                            >
-                                <FaSearch className="text-white" />
-                            </button>
-                        </div>
+                        <input
+                            type="number"
+                            placeholder="Max TL"
+                            className="w-full border border-gray-300 rounded-md p-2 text-sm bg-gray-100"
+                            value={localMaxPrice}
+                            onChange={(e) => setLocalMaxPrice(e.target.value)}
+                        />
+
+                        <button
+                            onClick={() => {
+                                setMinPriceValue(localMinPrice);
+                                setMaxPriceValue(localMaxPrice);
+                            }}
+                            className="rounded-md px-4 flex items-center justify-center bg-gray-400"
+                        >
+                            <FaSearch className="text-white" />
+                        </button>
                     </div>
                 </div>
             )}
@@ -109,4 +105,4 @@ function PriceInterval({
     );
 }
 
-export default PriceInterval
+export default PriceInterval;

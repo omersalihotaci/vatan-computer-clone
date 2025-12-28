@@ -22,26 +22,42 @@ public class ProductResponseFactory {
 
         ProductResponse dto = productMapper.toDTO(product);
 
-        // tüm varyantları ekle
+        // tüm varyantlar
+        List<ProductVariant> allVariants =
+                product.getVariants() != null ? product.getVariants() : List.of();
+
         dto = dto.withVariants(
-                product.getVariants().stream()
+                allVariants.stream()
                         .map(productVariantMapper::toDTO)
                         .toList()
         );
 
-        // eşleşen varyantları ekle
+        // eşleşen varyantlar
+        List<ProductVariant> safeMatched =
+                matchedVariants != null ? matchedVariants : List.of();
+
         dto = dto.withMatchedVariants(
-                matchedVariants.stream()
+                safeMatched.stream()
                         .map(productVariantMapper::toDTO)
                         .toList()
         );
 
-        // selectedVariant = matched içindeki en ucuz
-        ProductVariant selected = matchedVariants.stream()
-                .min(Comparator.comparing(ProductVariant::getPrice))
-                .orElse(product.getVariants().get(0)); // fallback
+        // selectedVariant seçimi (ASLA get(0) YOK)
+        ProductVariant selected = null;
 
-        dto = dto.withSelectedVariant(productVariantMapper.toDTO(selected));
+        if (!safeMatched.isEmpty()) {
+            selected = safeMatched.stream()
+                    .min(Comparator.comparing(ProductVariant::getPrice))
+                    .orElse(null);
+        } else if (!allVariants.isEmpty()) {
+            selected = allVariants.stream()
+                    .min(Comparator.comparing(ProductVariant::getPrice))
+                    .orElse(null);
+        }
+
+        if (selected != null) {
+            dto = dto.withSelectedVariant(productVariantMapper.toDTO(selected));
+        }
 
         return dto;
     }

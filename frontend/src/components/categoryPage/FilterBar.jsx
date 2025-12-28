@@ -2,7 +2,7 @@ import React from 'react'
 import Brands from './filterSideBarElements/Brands';
 import PriceInterval from './filterSideBarElements/PriceInterval';
 
-function FilterBar({ categoryId, filterState }) {
+function FilterBar({ categoryId, filterState,mode,searchContext }) {
   const {
       brands,
       toggleBrand,
@@ -30,11 +30,15 @@ function FilterBar({ categoryId, filterState }) {
 
           {/* Marka Filtresi */}
           <Brands
+              mode={mode}
+                searchContext={searchContext}
               categoryId={categoryId}
               selectedBrands={brands}
               toggleBrand={toggleBrand}
       />
-      <PriceInterval
+          <PriceInterval
+              mode={mode}
+                searchContext={searchContext}
           categoryId={categoryId}
           price={price}
           setMinPriceValue={setMinPriceValue}

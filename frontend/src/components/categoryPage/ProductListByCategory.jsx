@@ -1,9 +1,9 @@
 import React from 'react'
-import { useFilteredProducts } from '../../hooks/useFilterApi';
+import { useFilteredProductsByCategory } from "../../hooks/useFilterApi";
 import FilterProductCard from '../product-card/FilterProductCard';
 
 function ProductListByCategory({categoryId, filterState}) {
-  const { data: products } = useFilteredProducts(categoryId, {
+  const { data: products } = useFilteredProductsByCategory(categoryId, {
       priceRanges: filterState.selectedPriceRanges,
       brands: filterState.brands,
       minPrice: filterState.price.min,

@@ -12,7 +12,9 @@ function Brands({ categoryId, selectedBrands, toggleBrand }) {
                 className="flex justify-between items-center cursor-pointer"
                 onClick={() => setOpen((prev) => !prev)}
             >
-                <h3 className="font-semibold text-gray-800 text-md">Markalar</h3>
+                <h3 className="font-semibold text-gray-800 text-md">
+                    Markalar
+                </h3>
                 <span className="text-xl leading-none">{open ? "−" : "+"}</span>
             </div>
 

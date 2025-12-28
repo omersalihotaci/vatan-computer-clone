@@ -15,6 +15,9 @@ export const useFilterState = () => {
                 : [...prev, brand]
         );
     };
+    const setBrandsDirectly = (brands) => {
+        setBrands(brands);
+    };
 
     // --- PRICE (Min/Max) ---
     const setMinPriceValue = (value) => {
@@ -70,6 +73,7 @@ export const useFilterState = () => {
         setMinPriceValue,
         setMaxPriceValue,
         toggleBrand,
+        setBrandsDirectly,
         togglePriceRange,
         toggleAttribute,
         resetFilters,

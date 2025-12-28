@@ -12,11 +12,16 @@ import { useState, useRef, useEffect } from "react";
 
 function MainNavbar() {
     const [open, setOpen] = useState(false);
+    const [searchValue, setSearchValue] = useState("");
     const navigate = useNavigate()
     const { user, logout } = useAuth();
     const dropdownRef = useRef(null);
 
+    const handleSearch = () => {
+        if (!searchValue.trim()) return;
 
+        navigate(`/search?q=${encodeURIComponent(searchValue.trim())}`);
+    };
     const handleLogout = () => {
         logout();
         setOpen(false);
@@ -73,9 +78,15 @@ function MainNavbar() {
                         type="text"
                         name="search"
                         placeholder="Aramak istediğiniz ürünü yazın"
+                        value={searchValue}
+                        onChange={(e) => setSearchValue(e.target.value)}
+                        onKeyDown={(e) => {
+                            if (e.key === "Enter") handleSearch();
+                        }}
                         className="w-full px-4 py-2 border border-cardBorder bg-cardBorder rounded-full focus:outline-none"
                     />
                     <IoSearch
+                        onClick={handleSearch}
                         className="absolute right-4 top-1/2 -translate-y-1/2 text-black cursor-pointer"
                         size={18}
                     />
@@ -146,8 +157,9 @@ function MainNavbar() {
                     </div>
 
                     <button
-                        onClick={()=>navigate("/cart")}
-                        className="flex items-center justify-between px-6 py-2 gap-2 bg-cardBorder rounded-full hover:bg-gray-200 transition-colors">
+                        onClick={() => navigate("/cart")}
+                        className="flex items-center justify-between px-6 py-2 gap-2 bg-cardBorder rounded-full hover:bg-gray-200 transition-colors"
+                    >
                         <AiOutlineShoppingCart
                             className="text-black"
                             size={18}

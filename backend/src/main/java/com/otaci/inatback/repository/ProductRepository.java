@@ -16,6 +16,17 @@ public interface ProductRepository extends JpaRepository<Product,Long> {
     List<Product> findByBestSellerTrue();
     List<Product> findByCategoryId(Long categoryId);
     @Query("""
+        select distinct p
+        from Product p
+        left join p.variants v
+        where p.deleted = false
+          and (
+              lower(p.title) like lower(concat('%', :query, '%'))
+              or lower(p.brand) like lower(concat('%', :query, '%'))
+          )
+    """)
+    List<Product> searchProducts(@Param("query") String query);
+    @Query("""
     SELECT p FROM Product p
     LEFT JOIN FETCH p.variants v
     WHERE p.id = :id

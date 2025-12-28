@@ -3,7 +3,6 @@ import MainLayout from "../layout/MainLayout";
 import FeaturedProducts from "../components/product-card/FeaturedProducts";
 import Slider from "../components/Slider";
 import BestSellerProducts from "../components/product-card/BestSellerProducts";
-import CategoryLayout from "../components/categoryPage/CategoryLayout";
 import AuthLayout from "../components/auth/AuthLayout";
 import ProductDetailPage from "../components/product-detail-page/ProductDetailPage";
 import CheckoutLayout from "../layout/CheckoutLayout";
@@ -13,6 +12,8 @@ import ShippingPage from "../components/checkout/ShippingPage";
 import PaymentPage from "../components/paymentPage/PaymentPage";
 import PaymentSuccess from "../components/paymentPage/PaymentSuccess ";
 import Footer from "../components/footer/Footer";
+import CategoryPage from "../pages/CategoryPage";
+import SearchPage from "../pages/SearchPage";
 export const router = createBrowserRouter([
     {
         path: "/",
@@ -35,7 +36,11 @@ export const router = createBrowserRouter([
             },
             {
                 path: "category/:categoryId",
-                element: <CategoryLayout />,
+                element: <CategoryPage />,
+            },
+            {
+                path: "search",
+               element: <SearchPage />,
             },
             {
                 path: "auth",
