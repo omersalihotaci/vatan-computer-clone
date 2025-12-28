@@ -2,6 +2,7 @@
 
     import com.otaci.inatback.dto.PriceIntervalDto;
     import com.otaci.inatback.dto.ProductResponse;
+    import com.otaci.inatback.entity.Category;
     import com.otaci.inatback.entity.Product;
     import com.otaci.inatback.entity.ProductVariant;
     import com.otaci.inatback.exception.custom.ResourceNotFoundException;
@@ -25,6 +26,7 @@
         private final ProductVariantRepository productVariantRepository;
         private final ProductRepository productRepository;
         private final ProductResponseFactory responseFactory;
+        private final CategoryServiceImpl categoryService;
 
         private int determineBucketCount(double range) {
             if (range < 500) return 3;
@@ -49,16 +51,28 @@
 
         @Override
         public List<PriceIntervalDto> getPriceIntervalsByCategory(Long categoryId) {
-            categoryRepository.findById(categoryId)
-                    .orElseThrow(() -> new ResourceNotFoundException("Category not found with id: " + categoryId));
-            Double minPrice = productVariantRepository.findMinPriceByCategory(categoryId);
-            Double maxPrice = productVariantRepository.findMaxPriceByCategory(categoryId);
+
+            Category category = categoryRepository.findById(categoryId)
+                    .orElseThrow(() ->
+                            new ResourceNotFoundException("Category not found with id: " + categoryId));
+
+            List<Long> categoryIds =
+                    categoryService.getAllLeafCategoryIds(category.getId());
+
+            Double minPrice =
+                    productVariantRepository.findMinPriceByCategoryIdIn(categoryIds);
+
+            Double maxPrice =
+                    productVariantRepository.findMaxPriceByCategoryIdIn(categoryIds);
+
             if (minPrice == null || maxPrice == null) {
                 return List.of();
             }
+
             int bucketCount = determineBucketCount(maxPrice - minPrice);
             return buildNicePriceIntervals(minPrice, maxPrice, bucketCount);
         }
+
 
         private List<PriceIntervalDto> buildNicePriceIntervals(double min, double max, int bucketCount) {
 
@@ -97,10 +111,17 @@
 
         @Override
         public List<String> getBrandsByCategory(Long categoryId) {
-            categoryRepository.findById(categoryId)
-                    .orElseThrow(() -> new ResourceNotFoundException("Category not found with id: " + categoryId));
-            return productRepository.findDistinctBrandsByCategory(categoryId);
+
+            Category category = categoryRepository.findById(categoryId)
+                    .orElseThrow(() ->
+                            new ResourceNotFoundException("Category not found with id: " + categoryId));
+
+            List<Long> categoryIds =
+                    categoryService.getAllLeafCategoryIds(category.getId());
+
+            return productRepository.findDistinctBrandsByCategoryIdIn(categoryIds);
         }
+
 
         @Override
         public List<ProductResponse> filterProducts(
@@ -111,8 +132,11 @@
                 List<String> priceRanges
         ) {
 
-            categoryRepository.findById(categoryId)
+            Category category=  categoryRepository.findById(categoryId)
                     .orElseThrow(() -> new ResourceNotFoundException("Category not found"));
+
+           List<Long> categoryIds =
+                   categoryService.getAllLeafCategoryIds(category.getId());
 
             // 1) PriceRanges parse
             List<PriceRange> parsedRanges = new ArrayList<>();
@@ -134,8 +158,8 @@
             // 2) Base products (brand + category)
             List<Product> products =
                     (brands != null && !brands.isEmpty())
-                            ? productRepository.findByCategoryIdAndBrandInAndDeletedFalse(categoryId, brands)
-                            : productRepository.findByCategoryIdAndDeletedFalse(categoryId);
+                            ? productRepository.findByCategoryIdInAndBrandInAndDeletedFalse(categoryIds, brands)
+                            : productRepository.findByCategoryIdInAndDeletedFalse(categoryIds);
 
             List<ProductResponse> result = new ArrayList<>();
 

@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -74,4 +75,31 @@ public class CategoryServiceImpl implements ICategoryService {
             category.setDeletedAt(LocalDateTime.now());
 
         }
+
+    @Override
+    public List<Long> getAllLeafCategoryIds(Long categoryId) {
+
+        Category root = categoryRepository.findById(categoryId)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Category not found"));
+
+        List<Long> result = new ArrayList<>();
+        collectLeafCategoryIds(root, result);
+        return result;
+    }
+
+    private void collectLeafCategoryIds(Category category, List<Long> result) {
+
+        // leaf category
+        if (category.getChildren() == null || category.getChildren().isEmpty()) {
+            result.add(category.getId());
+            return;
+        }
+
+        // parent category
+        for (Category child : category.getChildren()) {
+            collectLeafCategoryIds(child, result);
+        }
+    }
+
 }

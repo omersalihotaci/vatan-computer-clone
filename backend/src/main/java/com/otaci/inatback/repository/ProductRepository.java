@@ -16,22 +16,26 @@ public interface ProductRepository extends JpaRepository<Product,Long> {
     List<Product> findByBestSellerTrue();
     List<Product> findByCategoryId(Long categoryId);
     @Query("""
-    SELECT DISTINCT p.brand
-    FROM Product p
-    WHERE p.category.id = :categoryId
-      AND p.deleted = false
-""")
-    List<String> findDistinctBrandsByCategory(@Param("categoryId") Long categoryId);
-
-    List<Product> findByCategoryIdAndDeletedFalse(Long categoryId);
-
-    List<Product> findByCategoryIdAndBrandInAndDeletedFalse(Long categoryId, List<String> brands);
-
-    @Query("""
     SELECT p FROM Product p
     LEFT JOIN FETCH p.variants v
     WHERE p.id = :id
 """)
     Optional<Product> findByIdWithVariants(@Param("id") Long id);
+    @Query("""
+        select distinct p.brand
+        from Product p
+        where p.category.id in :categoryIds
+          and p.deleted = false
+    """)
+    List<String> findDistinctBrandsByCategoryIdIn(
+            @Param("categoryIds") List<Long> categoryIds
+    );
+    List<Product> findByCategoryIdInAndBrandInAndDeletedFalse(
+            List<Long> categoryIds,
+            List<String> brands
+    );
+    List<Product> findByCategoryIdInAndDeletedFalse(
+            List<Long> categoryIds
+    );
 
 }

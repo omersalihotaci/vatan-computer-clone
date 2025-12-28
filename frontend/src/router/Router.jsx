@@ -12,6 +12,7 @@ import ProtectedRoute from "./ProtectedRoute";
 import ShippingPage from "../components/checkout/ShippingPage";
 import PaymentPage from "../components/paymentPage/PaymentPage";
 import PaymentSuccess from "../components/paymentPage/PaymentSuccess ";
+import Footer from "../components/footer/Footer";
 export const router = createBrowserRouter([
     {
         path: "/",
@@ -24,6 +25,7 @@ export const router = createBrowserRouter([
                         <Slider />
                         <FeaturedProducts />
                         <BestSellerProducts />
+                        <Footer />
                     </>
                 ),
             },

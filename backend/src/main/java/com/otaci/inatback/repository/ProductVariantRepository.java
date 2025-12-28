@@ -22,4 +22,23 @@ public interface ProductVariantRepository extends JpaRepository<ProductVariant,L
             "WHERE v.product.category.id = :categoryId AND v.product.deleted = false")
     Double findMaxPriceByCategory(@Param("categoryId") Long categoryId);
 
+    @Query("""
+    select min(v.price)
+    from ProductVariant v
+    join v.product p
+    where p.category.id in :categoryIds
+      and p.deleted = false
+""")
+    Double findMinPriceByCategoryIdIn(List<Long> categoryIds);
+
+    @Query("""
+    select max(v.price)
+    from ProductVariant v
+    join v.product p
+    where p.category.id in :categoryIds
+      and p.deleted = false
+""")
+    Double findMaxPriceByCategoryIdIn(List<Long> categoryIds);
+
+
 }
