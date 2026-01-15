@@ -1,11 +1,11 @@
 import axios from "axios";
 
 export const http = axios.create({
-    baseURL: "http://localhost:8080/api",
+    baseURL: "https://vatan-computer-clone.onrender.com",
     headers: {
         "Content-Type": "application/json",
         "Cache-Control": "no-cache",
-        "Pragma": "no-cache",
+        Pragma: "no-cache",
     },
 });
 
