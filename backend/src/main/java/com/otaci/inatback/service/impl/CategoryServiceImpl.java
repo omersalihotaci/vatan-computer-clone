@@ -25,11 +25,33 @@ public class CategoryServiceImpl implements ICategoryService {
   private final  CategoryRepository categoryRepository;
     private final CategoryMapper categoryMapper;
 
+    @Override
+    @Transactional(readOnly = true)
     public List<CategoryTreeResponse> getMainCategories() {
-        return categoryRepository.findByParentIsNullOrderByIdAsc()
-                .stream()
-                .map(categoryMapper::toTreeDTO)
+
+        List<Category> roots =
+                categoryRepository.findRootCategoriesWithChildren();
+
+        return roots.stream()
+                .map(this::buildTree)
                 .toList();
+    }
+
+    private CategoryTreeResponse buildTree(Category category) {
+
+        List<CategoryTreeResponse> children =
+                category.getChildren() == null
+                        ? List.of()
+                        : category.getChildren()
+                        .stream()
+                        .map(this::buildTree)
+                        .toList();
+
+        return new CategoryTreeResponse(
+                category.getId(),
+                category.getName(),
+                children
+        );
     }
 
     @Override
