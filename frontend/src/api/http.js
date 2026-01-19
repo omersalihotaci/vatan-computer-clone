@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export const http = axios.create({
-    baseURL:import.meta.env.VITE_API_BASE_URL,
+    baseURL:"https://vatan-computer-clone.onrender.com/api",
     headers: {
         "Content-Type": "application/json",
         "Cache-Control": "no-cache",
