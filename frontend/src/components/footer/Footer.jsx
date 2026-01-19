@@ -8,6 +8,10 @@ export default function Footer() {
             <FooterTop />
             <FooterFeatures />
             <FooterLinks />
+            <div className="text-lg text-gray-400 text-center ">
+                Bu proje ticari amaç gütmemektedir. Eğitim ve kişisel gelişim
+                amacıyla hazırlanmış bir clone projedir.
+            </div>
         </footer>
     );
 }

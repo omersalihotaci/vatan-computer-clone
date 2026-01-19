@@ -13,6 +13,7 @@ import com.otaci.inatback.service.IFilterService;
 import com.otaci.inatback.service.helper.ProductResponseFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -102,6 +103,7 @@ public class FilterServiceImpl implements IFilterService {
      ------------------------------------------------- */
 
     @Override
+    @Transactional(readOnly = true)
     public List<PriceIntervalDto> getPriceIntervalsByCategory(Long categoryId) {
 
         Category category = categoryRepository.findById(categoryId)
@@ -117,6 +119,7 @@ public class FilterServiceImpl implements IFilterService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<String> getBrandsByCategory(Long categoryId) {
 
         Category category = categoryRepository.findById(categoryId)
@@ -156,6 +159,7 @@ public class FilterServiceImpl implements IFilterService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<ProductResponse> filterProducts(
             Long categoryId,
             List<String> brands,

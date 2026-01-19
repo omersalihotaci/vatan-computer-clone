@@ -30,7 +30,7 @@ public class CategoryServiceImpl implements ICategoryService {
     public List<CategoryTreeResponse> getMainCategories() {
 
         List<Category> roots =
-                categoryRepository.findRootCategoriesWithChildren();
+                categoryRepository.findByParentIsNullOrderByIdAsc();
 
         return roots.stream()
                 .map(this::buildTree)

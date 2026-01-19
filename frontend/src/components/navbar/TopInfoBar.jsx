@@ -24,7 +24,7 @@ function TopInfoBar() {
                 {topBarLinks.map((item) => (
                     <Link
                         key={item.label}
-                        to={item.path}
+                       // to={item.path}
                         className="hover:text-primary transition text-sm"
                     >
                         {item.label}

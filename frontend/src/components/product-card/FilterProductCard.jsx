@@ -3,10 +3,14 @@ import { Link } from 'react-router-dom'
 import BaseProductCard from './BaseProductCard'
 function FilterProductCard({ product }) {
   return (
-     <Link to={`/product/${product.id}`} key={product.id}>
-                <BaseProductCard product={product} size="medium" />
-            </Link>
-  )
+      <Link
+          to={`/product/${product.id}`}
+          key={product.id}
+          state={{ selectedVariantId: product.selectedVariant?.id }}
+      >
+          <BaseProductCard product={product} size="medium" />
+      </Link>
+  );
 }
 
 export default FilterProductCard

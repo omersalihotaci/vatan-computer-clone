@@ -20,13 +20,12 @@ export const router = createBrowserRouter([
         element: <MainLayout />,
         children: [
             {
-                index: true, //Bu, parent path (/) için varsayılan (default) child sayfadır
+                index: true,
                 element: (
                     <>
                         <Slider />
                         <FeaturedProducts />
                         <BestSellerProducts />
-                        <Footer />
                     </>
                 ),
             },
