@@ -9,8 +9,7 @@ function MainLayout() {
     return (
         <div className="min-h-screen flex flex-col">
             <ScrollToTop />
-            <Navbar />
-          
+            <Navbar />          
             <main className="flex-1">
                 <Outlet />
             </main>

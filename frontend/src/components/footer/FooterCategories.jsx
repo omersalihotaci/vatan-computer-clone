@@ -22,8 +22,7 @@ export default function FooterCategories() {
             <div
                 className="grid grid-cols-2 gap-8 text-sm text-gray-600
                 [&_a]:cursor-pointer
-                [&_a]:transition-all
-                [&_a]:hover:text-white"
+                [&_a]:hover:underline"
             >
                 <ul className="space-y-2">
                     {leftColumn.map((cat) => (

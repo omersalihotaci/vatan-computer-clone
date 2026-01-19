@@ -1,4 +1,4 @@
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, Outlet } from "react-router-dom";
 import MainLayout from "../layout/MainLayout";
 import FeaturedProducts from "../components/product-card/FeaturedProducts";
 import Slider from "../components/Slider";
@@ -14,6 +14,7 @@ import PaymentSuccess from "../components/paymentPage/PaymentSuccess ";
 import Footer from "../components/footer/Footer";
 import CategoryPage from "../pages/CategoryPage";
 import SearchPage from "../pages/SearchPage";
+import CheckoutGuard from "./CheckoutGuard";
 export const router = createBrowserRouter([
     {
         path: "/",
@@ -39,7 +40,7 @@ export const router = createBrowserRouter([
             },
             {
                 path: "search",
-               element: <SearchPage />,
+                element: <SearchPage />,
             },
             {
                 path: "auth",
@@ -58,14 +59,25 @@ export const router = createBrowserRouter([
                 path: "cart",
                 element: <CartPage />,
             },
+
             {
-                path: "checkout/shipping",
-                element: <ShippingPage />,
+                element: (
+                    <CheckoutGuard>
+                        <Outlet />
+                    </CheckoutGuard>
+                ),
+                children: [
+                    {
+                        path: "checkout/shipping",
+                        element: <ShippingPage />,
+                    },
+                    {
+                        path: "checkout/payment",
+                        element: <PaymentPage />,
+                    },
+                ],
             },
-            {
-                path: "checkout/payment",
-                element: <PaymentPage />,
-            },
+
             {
                 path: "payment-success",
                 element: <PaymentSuccess />,

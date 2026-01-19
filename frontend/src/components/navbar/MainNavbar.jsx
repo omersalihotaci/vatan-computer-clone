@@ -8,10 +8,15 @@ import { MdKeyboardArrowDown } from "react-icons/md";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/useAuth";
 import { useState, useRef, useEffect } from "react";
+import MobileMenu from "./MobileMenu";
+import MobileProfileMenu from "./MobileProfileMenu";
+
 
 
 function MainNavbar() {
     const [open, setOpen] = useState(false);
+    const [mobileProfileOpen, setMobileProfileOpen] = useState(false);
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [searchValue, setSearchValue] = useState("");
     const navigate = useNavigate()
     const { user, logout } = useAuth();
@@ -50,7 +55,10 @@ function MainNavbar() {
     return (
         <div className="flex items-center justify-between h-16  relative w-full px-6 lg:px-8 xl:px-42  lg:mt-4 ">
             {/* Mobile hamburger menu */}
-            <button className="lg:hidden p-2">
+            <button
+                className="lg:hidden p-2"
+                onClick={() => setMobileMenuOpen(true)}
+            >
                 <RxHamburgerMenu className="text-white" size={38} />
             </button>
 
@@ -130,7 +138,7 @@ function MainNavbar() {
                                                 navigate("/auth?tab=register");
                                             }}
                                         >
-                                            Kaydol
+                                            Üye Ol
                                         </button>
                                     </>
                                 ) : (
@@ -139,7 +147,7 @@ function MainNavbar() {
                                             className="w-full text-left px-4 py-2 hover:bg-gray-100"
                                             onClick={() => {
                                                 setOpen(false);
-                                                navigate("/profile");
+                                                //navigate("/profile");
                                             }}
                                         >
                                             Profilim
@@ -172,14 +180,28 @@ function MainNavbar() {
 
             {/* Mobile icons */}
             <div className="flex items-center justify-end gap-4 lg:hidden">
-                <div className="p-2  cursor-pointer text-white hover:bg-gray-800 hover:text-white transition">
+                <button
+                    onClick={() => setMobileProfileOpen(true)}
+                    className="p-2 cursor-pointer text-white hover:bg-gray-800 hover:text-white transition"
+                >
                     <FiUser size={28} />
-                </div>
+                </button>
 
-                <div className="p-2  cursor-pointer text-white hover:bg-gray-800 hover:text-white transition">
+                <button
+                    className="p-2  cursor-pointer text-white hover:bg-gray-800 hover:text-white transition"
+                    onClick={() => navigate("/cart")}
+                >
                     <AiOutlineShoppingCart size={28} />
-                </div>
+                </button>
             </div>
+            <MobileMenu
+                open={mobileMenuOpen}
+                onClose={() => setMobileMenuOpen(false)}
+            />
+            <MobileProfileMenu
+                open={mobileProfileOpen}
+                onClose={() => setMobileProfileOpen(false)}
+            />
         </div>
     );
 }
