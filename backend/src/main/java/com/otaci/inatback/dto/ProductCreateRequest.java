@@ -10,7 +10,7 @@ import java.util.List;
 public record ProductCreateRequest(
         @NotBlank(message = "{product.name.required}")
         @Size(min = 2, max = 120, message = "{product.name.length}")
-        String name,
+        String title,
 
         @Size(max = 1000, message = "{product.description.length}")
         String description,

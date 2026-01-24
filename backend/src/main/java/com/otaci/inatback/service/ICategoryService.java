@@ -12,5 +12,7 @@ public interface ICategoryService {
      CategoryResponse createRootCategory(CategoryCreateRequest request);
      void deleteCategory(Long id);
     List<Long> getAllLeafCategoryIds(Long categoryId);
+    CategoryResponse getCategoryById(Long id);
+
 
 }

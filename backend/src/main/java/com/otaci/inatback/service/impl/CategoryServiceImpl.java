@@ -53,6 +53,14 @@ public class CategoryServiceImpl implements ICategoryService {
                 children
         );
     }
+    @Override
+    public CategoryResponse getCategoryById(Long id) {
+        Category category = categoryRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Category not found with id: " + id));
+
+        return categoryMapper.toDTO(category);
+    }
+
 
     @Override
     public CategoryResponse createCategory(CategoryCreateRequest request, Long id) {

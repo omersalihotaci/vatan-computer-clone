@@ -10,7 +10,6 @@ function ProductListByCategory({categoryId, filterState}) {
       maxPrice: filterState.price.max,
       // attributes: filterState.attributesSelectedOptions,
   });
-  console.log(products);
   
   return (
     <div>

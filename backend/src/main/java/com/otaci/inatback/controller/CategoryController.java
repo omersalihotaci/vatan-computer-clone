@@ -24,6 +24,12 @@ public class CategoryController {
         List<CategoryTreeResponse> result = categoryService.getMainCategories();
         return ResponseEntity.ok(ApiResponse.success(result));
     }
+    @GetMapping("/{id}")
+    public ResponseEntity<ApiResponse<CategoryResponse>> getCategoryById(@PathVariable Long id) {
+        return ResponseEntity.ok(
+                ApiResponse.success(categoryService.getCategoryById(id))
+        );
+    }
     @PostMapping("/{parentId}/children")
     public ResponseEntity<ApiResponse<CategoryResponse>> createCategory(@RequestBody @Valid CategoryCreateRequest request, @PathVariable Long parentId) {
         return ResponseEntity.ok(ApiResponse.success(categoryService.createCategory(request,parentId),"Children Category created successfully"));

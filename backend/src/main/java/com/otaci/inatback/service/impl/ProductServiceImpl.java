@@ -81,8 +81,8 @@ public class ProductServiceImpl implements IProductService {
     @Transactional
     public ProductResponse createProduct(ProductCreateRequest request) {
         //  Aynı isimde ürün varsa → 409
-        if (productRepository.existsByTitle(request.name())) {
-            throw new ConflictException("Product already exists: " + request.name());
+        if (productRepository.existsByTitle(request.title())) {
+            throw new ConflictException("Product already exists: " + request.title());
         }
         //  Request -> Entity
         Product product = productMapper.toEntity(request);

@@ -8,8 +8,8 @@ const SIZE_PRESETS = {
         padding: "p-5",
     },
     medium: {
-        wrapper: "max-w-[280px]",
-        img: "h-28 md:h-32 lg:h-[220px]",
+        wrapper: "w-full",
+        img: "h-40 md:h-48 lg:h-56",
         title: "text-sm min-h-[44px]",
         padding: "p-4",
     },
@@ -29,12 +29,12 @@ export default function BaseProductCard({ product, size = "medium" }) {
             className={`bg-white  rounded-lg border border-gray-300 overflow-hidden flex flex-col cursor-pointer ${preset.wrapper}`}
         >
             <div
-                className={`w-full flex items-center justify-center overflow-hidden ${preset.img}`}
+                className={`w-full flex items-center justify-center  ${preset.img}`}
             >
                 <img
                     src={product.images[0] || "/placeholder.svg"}
                     alt={`${product.brand} ${product.shortTitle}`}
-                    className="object-contain scale-75 max-h-full"
+                    className="h-full w-full object-contain"
                 />
             </div>
 
@@ -45,7 +45,7 @@ export default function BaseProductCard({ product, size = "medium" }) {
                     {product.shortTitle}
                 </h2>
 
-                <div className="flex items-baseline gap-1">
+                <div className="mt-auto flex items-baseline gap-1">
                     <span className="text-2xl font-bold text-blue-900">
                         {product.selectedVariant?.price ?? 1224}
                     </span>

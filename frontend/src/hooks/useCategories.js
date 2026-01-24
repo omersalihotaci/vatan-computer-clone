@@ -9,3 +9,13 @@ export const useCategoryTree = () =>
         retry: 1, // hata olursa 1 kez yeniden dene
         refetchOnWindowFocus: false, // sekmeye dönünce tekrar fetch etme
     });
+
+export const useCategoryById = (categoryId) =>
+    useQuery({
+        queryKey: ["category", categoryId],
+        queryFn: () => CategoryApi.fetchCategoryById(categoryId),
+        enabled: !!categoryId, // categoryId varsa çalış
+        staleTime: 1000 * 60 * 5,
+        retry: 1,
+        refetchOnWindowFocus: false,
+    });
