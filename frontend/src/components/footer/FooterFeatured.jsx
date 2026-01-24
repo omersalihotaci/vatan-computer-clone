@@ -1,14 +1,14 @@
 import { Link } from "react-router-dom";
 
 const featuredProducts = [
-    { id: 101, name: "iPhone 17" },
-    { id: 102, name: "iPhone 17 Pro Max" },
-    { id: 103, name: "iPhone 16" },
-    { id: 104, name: "iPhone 16 Pro" },
-    { id: 201, name: "Galaxy S25" },
-    { id: 202, name: "Galaxy S25 Ultra" },
-    { id: 203, name: "Galaxy Z Fold7" },
-    { id: 204, name: "Galaxy Z Flip7" },
+    { id: 19, name: "iPad A16" },
+    { id: 1, name: "iPhone 17 Pro Max" },
+    { id: 26, name: "MacBook Air" },
+    { id: 15, name: "Honor Magic 7 Pro" },
+    { id: 27, name: "MacBook Pro" },
+    { id: 12, name: "Galaxy S24 Ultra" },
+    { id: 32, name: "Huawei Matebook D16" },
+    { id: 16, name: "Honor Magic V2" },
 ];
 
 export default function FooterFeatured() {
